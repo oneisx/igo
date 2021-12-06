@@ -1,6 +1,7 @@
 package util
 
 import (
+	"github.com/atotto/clipboard"
 	"strconv"
 )
 
@@ -12,4 +13,8 @@ func IsNum(str string) bool {
 func Atoi(str string) int {
 	v, _ := strconv.Atoi(str)
 	return v
+}
+
+func WriteClipboard(str string)  {
+	_ = clipboard.WriteAll(str)
 }

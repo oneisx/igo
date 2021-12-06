@@ -11,6 +11,7 @@ require (
 )
 
 require (
+	github.com/atotto/clipboard v0.1.4 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/gookit/color v1.4.2 // indirect
 	github.com/gookit/goutil v0.3.13 // indirect

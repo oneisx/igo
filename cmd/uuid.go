@@ -54,5 +54,6 @@ func doGenerateUUID(num int) {
 	for i := 0; i < num; i++ {
 		newUUID, _ := uuid.NewUUID()
 		fmt.Println(newUUID.String())
+		//util.WriteClipboard(newUUID.String())
 	}
 }
