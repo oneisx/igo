@@ -5,6 +5,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/spf13/cobra"
 	"igo/util"
+	"strings"
 )
 
 // uuidCmd represents the uuid command
@@ -51,9 +52,13 @@ func generateUUID(args []string) {
 }
 
 func doGenerateUUID(num int) {
+	var uuids []string
 	for i := 0; i < num; i++ {
 		newUUID, _ := uuid.NewUUID()
-		fmt.Println(newUUID.String())
-		//util.WriteClipboard(newUUID.String())
+		uuids = append(uuids, newUUID.String())
 	}
+	str := strings.Join(uuids, "\n")
+	fmt.Println(str)
+	util.WriteClipboard(str)
 }
+
