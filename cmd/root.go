@@ -1,11 +1,12 @@
 package cmd
 
 import (
+	"bufio"
 	"fmt"
-	"os"
-
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"os"
+	"strings"
 )
 
 var cfgFile string
@@ -14,13 +15,41 @@ var cfgFile string
 var rootCmd = &cobra.Command{
 	Use:   "igo",
 	Short: "igo",
-	Long: `igo`,
+	Long:  `igo`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
+	interactiveModeIfNeed(rootCmd)
 	cobra.CheckErr(rootCmd.Execute())
+}
+
+func interactiveModeIfNeed(cmd *cobra.Command) {
+	isInteractive, _ := cmd.Flags().GetBool("interactive")
+	if isInteractive {
+		doInteractive(cmd)
+	}
+}
+
+func doInteractive(cmd *cobra.Command) {
+	inputReader := bufio.NewReader(os.Stdin)
+	for {
+		fmt.Print("igo>")
+		input, err := inputReader.ReadString('\n')
+		checkExit(input)
+		if err != nil {
+			return
+		}
+		fmt.Print(input)
+	}
+}
+
+func checkExit(input string) {
+	if strings.Compare(":q\n", input) == 0 {
+		fmt.Println("bye")
+		os.Exit(1)
+	}
 }
 
 func init() {
@@ -35,6 +64,7 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.Flags().BoolP("interactive", "i", false, "Interactively execute commands")
 }
 
 // initConfig reads in config file and ENV variables if set.
