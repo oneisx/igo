@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"io"
 	"os"
+	"os/exec"
 	"strings"
 )
 
@@ -36,17 +38,30 @@ func doInteractive(cmd *cobra.Command) {
 	inputReader := bufio.NewReader(os.Stdin)
 	for {
 		fmt.Print("igo>")
-		input, err := inputReader.ReadString('\n')
+		input := readString(inputReader)
+
 		checkExit(input)
-		if err != nil {
-			return
-		}
-		fmt.Print(input)
+
+		execChildCommand(cmd, input)
 	}
 }
 
+func execChildCommand(cmd *cobra.Command, input string) {
+	command := "cmd.exe"
+	params := []string{"/c", "igo " + input}
+	execCommand(command, params)
+}
+
+func readString(reader *bufio.Reader) string {
+	input, err := reader.ReadString('\n')
+	if err != nil {
+		os.Exit(1)
+	}
+	return input[:len(input)-2]
+}
+
 func checkExit(input string) {
-	if strings.Compare(":q\n", input) == 0 {
+	if strings.Compare(":q", input) == 0 {
 		fmt.Println("bye")
 		os.Exit(1)
 	}
@@ -64,7 +79,7 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	rootCmd.Flags().BoolP("interactive", "i", false, "Interactively execute commands")
+	rootCmd.Flags().BoolP("interactive", "i", true, "Interactively execute commands")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -92,4 +107,40 @@ func initConfig() {
 			return
 		}
 	}
+}
+
+func execCommand(commandName string, params []string) bool {
+	cmd := exec.Command(commandName, params...)
+
+	//显示运行的命令
+	//fmt.Println(cmd.Args)
+
+	stdout, err := cmd.StdoutPipe()
+
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+
+	err = cmd.Start()
+	if err != nil {
+		return false
+	}
+
+	reader := bufio.NewReader(stdout)
+
+	//实时循环读取输出流中的一行内容
+	for {
+		line, err2 := reader.ReadString('\n')
+		if err2 != nil || io.EOF == err2 {
+			break
+		}
+		fmt.Println(line)
+	}
+
+	err = cmd.Wait()
+	if err != nil {
+		return false
+	}
+	return true
 }
