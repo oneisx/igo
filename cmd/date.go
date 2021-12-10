@@ -10,8 +10,8 @@ import (
 // dateCmd represents the date command
 var dateCmd = &cobra.Command{
 	Use:   "date",
-	Short: "Transfer timestamp to date string",
-	Long: `Transfer timestamp to date string`,
+	Short: "transfer timestamp to date string",
+	Long: `transfer timestamp to date string`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("date called" + cast.ToString(args))
 	},

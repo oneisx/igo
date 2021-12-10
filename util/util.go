@@ -15,6 +15,6 @@ func Atoi(str string) int {
 	return v
 }
 
-func WriteClipboard(str string)  {
+func WriteClipboard(str string) {
 	_ = clipboard.WriteAll(str)
 }
