@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/tidwall/pretty"
+	"igo/constant"
 	"igo/util"
 	"os"
 )
@@ -39,7 +40,7 @@ func handleJson() {
 
 func readJsonFromTerminal() string {
 	inputReader := bufio.NewReader(os.Stdin)
-	input, err := inputReader.ReadString(';')
+	input, err := inputReader.ReadString(constant.SemicolonDelim)
 	if err != nil {
 		panic(err)
 	}

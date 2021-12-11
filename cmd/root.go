@@ -5,18 +5,16 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"igo/constant"
 	"igo/util"
 	"os"
+	"runtime"
 	"strings"
 )
 
 var cfgFile string
 var interactive bool
-
-const (
-	igoCommandPrefix = "igo "
-	igoHelpCommand   = "igo help"
-)
+var version bool
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -24,22 +22,30 @@ var rootCmd = &cobra.Command{
 	Short: "igo",
 	Long:  `igo`,
 	Run: func(cmd *cobra.Command, args []string) {
-		interactiveModeIfNeed(cmd)
+		handleFlags()
 	},
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	cobra.CheckErr(rootCmd.Execute())
 }
 
-func interactiveModeIfNeed(cmd *cobra.Command) {
+func handleFlags() {
+	if version {
+		printVersion()
+	}
+
 	if interactive {
 		doInteractive()
-	} else {
-		util.ExecOSCmd(igoHelpCommand)
 	}
+
+	if !version && !interactive {
+		util.ExecOSCmd(constant.IgoHelpCommand)
+	}
+}
+
+func printVersion() {
+	fmt.Println(constant.AppName + constant.SpaceDelim + constant.AppVersion + constant.SpaceDelim + runtime.GOOS + constant.SlashDelim + runtime.GOARCH)
 }
 
 func doInteractive() {
@@ -51,7 +57,7 @@ func doInteractive() {
 		checkExit(input)
 
 		if input == "json" {
-			fmt.Println("json command does not support interactive mode")
+			fmt.Println("Error: json command does not support interactive mode")
 			continue
 		}
 
@@ -61,7 +67,7 @@ func doInteractive() {
 
 func execChildCommand(input string) {
 	if input != "" {
-		util.ExecOSCmd(igoCommandPrefix + input)
+		util.ExecOSCmd(constant.AppName + constant.SpaceDelim + input)
 	}
 }
 
@@ -85,6 +91,7 @@ func init() {
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.igo.yaml)")
 	rootCmd.Flags().BoolVarP(&interactive, "interactive", "i", false, "interactively execute commands")
+	rootCmd.Flags().BoolVarP(&version, "version", "v", false, "print the version of igo")
 }
 
 // initConfig reads in config file and ENV variables if set.
