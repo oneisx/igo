@@ -15,12 +15,14 @@ import (
 var cfgFile string
 var interactive bool
 var version bool
+var quit bool
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "igo",
 	Short: "igo",
-	Long:  `igo`,
+	Long:  `Welcome to igo, igo is a good helper, can generate UUID, beautify JSON, convert timestamp, etc. 
+For more functions, please see the help`,
 	Run: func(cmd *cobra.Command, args []string) {
 		handleFlags()
 	},
@@ -31,6 +33,10 @@ func Execute() {
 }
 
 func handleFlags() {
+	if quit {
+		fmt.Println("bye")
+		return
+	}
 	if version {
 		printVersion()
 	}
@@ -91,7 +97,7 @@ func readString(reader *bufio.Reader) string {
 }
 
 func checkExit(input string) {
-	if strings.Compare(":q", input) == 0 {
+	if strings.Contains(input, constant.QFlag) || strings.Contains(input, constant.QuitFlag) {
 		fmt.Println("bye")
 		os.Exit(1)
 	}
@@ -103,6 +109,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.igo.yaml)")
 	rootCmd.Flags().BoolVarP(&interactive, "interactive", "i", false, "interactively execute commands")
 	rootCmd.Flags().BoolVarP(&version, "version", "v", false, "print the version of igo")
+	rootCmd.Flags().BoolVarP(&quit, "quit", "q", false, "quit interactive mode")
 }
 
 // initConfig reads in config file and ENV variables if set.

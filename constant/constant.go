@@ -6,6 +6,8 @@ const (
 	IgoHelpCommand = "igo help"
 	IgoJsonCommand = "json"
 	IgoUglyFlag    = "-u"
+	QFlag          = "-q"
+	QuitFlag       = "--quit"
 	SpaceDelim     = " "
 	SlashDelim     = "/"
 	CommaDelim     = ","
