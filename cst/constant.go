@@ -1,11 +1,11 @@
-package constant
+package cst
 
 const (
 	AppVersion     = "v1.0.0"
 	AppName        = "igo"
-	IgoHelpCommand = "igo help"
-	IgoJsonCommand = "json"
-	IgoUglyFlag    = "-u"
+	HelpCommand    = "help"
+	JsonCommand    = "json"
+	UglyFlag       = "-u"
 	QFlag          = "-q"
 	QuitFlag       = "--quit"
 	SpaceDelim     = " "

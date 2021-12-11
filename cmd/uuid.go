@@ -8,42 +8,26 @@ import (
 	"strings"
 )
 
-// uuidCmd represents the uuid command
+var number int
+
 var uuidCmd = &cobra.Command{
 	Use:   "uuid",
 	Short: "generate uuid",
 	Long:  `generate uuid`,
+	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
-		generateUUID(args)
+		generateUUID()
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(uuidCmd)
+	uuidCmd.Flags().IntVarP(&number, "num", "n", 1, "The number of UUID that will be generated.")
 }
 
-func generateUUID(args []string) {
-	length := len(args)
-	if length > 1 {
-		err := fmt.Errorf("too many args found, length: %d", length)
-		fmt.Println(err.Error())
-		return
-	}
-
-	num := 0
-	if length == 1 && util.IsNum(args[0]) {
-		num = util.Atoi(args[0])
-	}
-
-	if length == 0 {
-		num = 1
-	}
-	doGenerateUUID(num)
-}
-
-func doGenerateUUID(num int) {
+func generateUUID() {
 	var uuids []string
-	for i := 0; i < num; i++ {
+	for i := 0; i < number; i++ {
 		newUUID, _ := uuid.NewUUID()
 		uuids = append(uuids, newUUID.String())
 	}
@@ -51,4 +35,3 @@ func doGenerateUUID(num int) {
 	fmt.Println(str)
 	util.WriteClipboard(str)
 }
-

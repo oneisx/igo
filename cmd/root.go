@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"igo/constant"
+	"igo/cst"
 	"igo/util"
 	"os"
 	"runtime"
@@ -21,7 +21,7 @@ var quit bool
 var rootCmd = &cobra.Command{
 	Use:   "igo",
 	Short: "igo",
-	Long:  `Welcome to igo, igo is a good helper, can generate UUID, beautify JSON, convert timestamp, etc.
+	Long: `Welcome to igo, igo is a good helper, can generate UUID, beautify JSON, convert timestamp, etc.
 No need to copy manually, the generated content will be placed on the clipboard.
 For more functions, please see the help.`,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -47,7 +47,7 @@ func handleFlags() {
 	}
 
 	if !version && !interactive {
-		util.ExecOSCmd(constant.IgoHelpCommand)
+		util.ExecOSCmd(cst.AppName + cst.SpaceDelim + cst.HelpCommand)
 	}
 }
 
@@ -64,25 +64,25 @@ func doInteractive() {
 }
 
 func execSubCommand(input string) {
-	if strings.Contains(input, constant.IgoJsonCommand) {
+	if strings.Contains(input, cst.JsonCommand) {
 		execJsonCommand(input)
 		return
 	}
 
 	if input != "" {
-		util.ExecOSCmd(constant.AppName + constant.SpaceDelim + input)
+		util.ExecOSCmd(cst.AppName + cst.SpaceDelim + input)
 	}
 }
 
 func execJsonCommand(input string) {
 	defer SetDefaultPretty()
-	ctx := strings.Split(input, constant.SpaceDelim)
+	ctx := strings.Split(input, cst.SpaceDelim)
 	for _, v := range ctx {
-		if v == constant.IgoUglyFlag {
+		if v == cst.UglyFlag {
 			Ugly = true
 		}
-		if v != "" && v != constant.IgoJsonCommand && v != constant.IgoUglyFlag {
-			util.ExecOSCmd(constant.AppName + constant.SpaceDelim + input)
+		if v != "" && v != cst.JsonCommand && v != cst.UglyFlag {
+			util.ExecOSCmd(cst.AppName + cst.SpaceDelim + input)
 			return
 		}
 	}
@@ -98,7 +98,7 @@ func readString(reader *bufio.Reader) string {
 }
 
 func checkExit(input string) {
-	if strings.Contains(input, constant.QFlag) || strings.Contains(input, constant.QuitFlag) {
+	if strings.Contains(input, cst.QFlag) || strings.Contains(input, cst.QuitFlag) {
 		fmt.Println("bye")
 		os.Exit(1)
 	}
@@ -141,5 +141,5 @@ func initConfig() {
 }
 
 func printVersion() {
-	fmt.Println(constant.AppName + constant.SpaceDelim + constant.AppVersion + constant.SpaceDelim + runtime.GOOS + constant.SlashDelim + runtime.GOARCH + constant.CommaDelim + constant.PoweredBy)
+	fmt.Println(cst.AppName + cst.SpaceDelim + cst.AppVersion + cst.SpaceDelim + runtime.GOOS + cst.SlashDelim + runtime.GOARCH + cst.CommaDelim + cst.PoweredBy)
 }

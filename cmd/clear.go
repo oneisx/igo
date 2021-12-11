@@ -10,7 +10,7 @@ import (
 var clearCmd = &cobra.Command{
 	Use:   "clear",
 	Short: "clear screen",
-	Long: `clear screen`,
+	Long:  `clear screen`,
 	Run: func(cmd *cobra.Command, args []string) {
 		util.ClearScreen()
 	},
