@@ -52,19 +52,34 @@ func doInteractive() {
 
 		checkExit(input)
 
-		if input == "json" {
-			fmt.Println("Error: json command does not support interactive mode")
-			continue
-		}
-
-		execChildCommand(input)
+		execSubCommand(input)
 	}
 }
 
-func execChildCommand(input string) {
+func execSubCommand(input string) {
+	if strings.Contains(input, constant.IgoJsonCommand) {
+		execJsonCommand(input)
+		return
+	}
+
 	if input != "" {
 		util.ExecOSCmd(constant.AppName + constant.SpaceDelim + input)
 	}
+}
+
+func execJsonCommand(input string) {
+	defer SetDefaultPretty()
+	ctx := strings.Split(input, constant.SpaceDelim)
+	for _, v := range ctx {
+		if v == constant.IgoUglyFlag {
+			Ugly = true
+		}
+		if v != "" && v != constant.IgoJsonCommand && v != constant.IgoUglyFlag {
+			util.ExecOSCmd(constant.AppName + constant.SpaceDelim + input)
+			return
+		}
+	}
+	HandleJson()
 }
 
 func readString(reader *bufio.Reader) string {
@@ -116,7 +131,6 @@ func initConfig() {
 		}
 	}
 }
-
 
 func printVersion() {
 	fmt.Println(constant.AppName + constant.SpaceDelim + constant.AppVersion + constant.SpaceDelim + runtime.GOOS + constant.SlashDelim + runtime.GOARCH + constant.CommaDelim + constant.PoweredBy)

@@ -10,7 +10,7 @@ import (
 	"os"
 )
 
-var ugly bool
+var Ugly bool
 
 const (
 	prettyMode = "pretty"
@@ -24,13 +24,13 @@ var jsonCmd = &cobra.Command{
 	Long:  `beautify json`,
 	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
-		handleJson()
+		HandleJson()
 	},
 }
 
-func handleJson() {
+func HandleJson() {
 	mode := prettyMode
-	if ugly {
+	if Ugly {
 		mode = uglyMode
 	}
 	fmt.Printf("igo>json:%s>", mode)
@@ -50,7 +50,7 @@ func readJsonFromTerminal() string {
 func doHandleJson(str string) {
 	jByte := []byte(str)
 	var result []byte
-	if ugly {
+	if Ugly {
 		result = pretty.Ugly(jByte)
 	} else {
 		result = pretty.Pretty(jByte)
@@ -60,7 +60,11 @@ func doHandleJson(str string) {
 	util.WriteClipboard(json)
 }
 
+func SetDefaultPretty() {
+	Ugly = false
+}
+
 func init() {
 	rootCmd.AddCommand(jsonCmd)
-	jsonCmd.Flags().BoolVarP(&ugly, "ugly", "u", false, "compress json")
+	jsonCmd.Flags().BoolVarP(&Ugly, "ugly", "u", false, "compress json")
 }
