@@ -44,10 +44,6 @@ func handleFlags() {
 	}
 }
 
-func printVersion() {
-	fmt.Println(constant.AppName + constant.SpaceDelim + constant.AppVersion + constant.SpaceDelim + runtime.GOOS + constant.SlashDelim + runtime.GOARCH)
-}
-
 func doInteractive() {
 	inputReader := bufio.NewReader(os.Stdin)
 	for {
@@ -119,4 +115,9 @@ func initConfig() {
 			return
 		}
 	}
+}
+
+
+func printVersion() {
+	fmt.Println(constant.AppName + constant.SpaceDelim + constant.AppVersion + constant.SpaceDelim + runtime.GOOS + constant.SlashDelim + runtime.GOARCH + constant.CommaDelim + constant.PoweredBy)
 }

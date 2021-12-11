@@ -6,6 +6,8 @@ const (
 	IgoHelpCommand   = "igo help"
 	SpaceDelim =" "
 	SlashDelim = "/"
+	CommaDelim = ","
 	SemicolonDelim = ';'
 	JsonBufSize = 40960
+	PoweredBy = "powered by oneisx"
 )
