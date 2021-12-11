@@ -21,8 +21,9 @@ var quit bool
 var rootCmd = &cobra.Command{
 	Use:   "igo",
 	Short: "igo",
-	Long:  `Welcome to igo, igo is a good helper, can generate UUID, beautify JSON, convert timestamp, etc. 
-For more functions, please see the help`,
+	Long:  `Welcome to igo, igo is a good helper, can generate UUID, beautify JSON, convert timestamp, etc.
+No need to copy manually, the generated content will be placed on the clipboard.
+For more functions, please see the help.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		handleFlags()
 	},

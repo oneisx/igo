@@ -1,6 +1,7 @@
 # igo
 Welcome to igo, igo is a good helper, can generate UUID, beautify JSON, convert timestamp, etc.
-For more functions, please see the help
+No need to copy manually, the generated content will be placed on the clipboard.
+For more functions, please see the help.
 
 ```
 Usage:
