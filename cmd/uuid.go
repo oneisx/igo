@@ -11,6 +11,7 @@ import (
 )
 
 var number int
+var uuidOriginUsageFun string
 
 var uuidCmd = &cobra.Command{
 	Use:   "uuid",
@@ -25,6 +26,22 @@ var uuidCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(uuidCmd)
 	uuidCmd.Flags().IntVarP(&number, "num", "n", 1, "The number of UUID that will be generated.")
+    uuidOriginUsageFun = uuidCmd.UsageString()
+	uuidCmd.SetUsageFunc(uuidUsageFunc)
+}
+
+var uuidUsageFunc = func(cmd *cobra.Command) error {
+	fmt.Println(uuidOriginUsageFun)
+	fmt.Println(`Examples:
+  Non-interactive:
+    igo uuid
+    igo uuid -n 3
+    igo uuid --num 3
+  Interactive:
+    uuid
+    uuid -n 3
+    uuid --num 3`)
+	return nil
 }
 
 func generateUUID() {

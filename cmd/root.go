@@ -17,7 +17,6 @@ var interactive bool
 var version bool
 var quit bool
 
-// rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "igo",
 	Short: "igo",
@@ -113,7 +112,6 @@ func init() {
 	rootCmd.Flags().BoolVarP(&quit, "quit", "q", false, "quit interactive mode")
 }
 
-// initConfig reads in config file and ENV variables if set.
 func initConfig() {
 	if cfgFile != "" {
 		// Use config file from the flag.
