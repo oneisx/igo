@@ -13,13 +13,18 @@ import (
 var cfgFile string
 var interactive bool
 
+const (
+	igoCommandPrefix = "igo "
+	igoHelpCommand   = "igo help"
+)
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "igo",
 	Short: "igo",
 	Long:  `igo`,
 	Run: func(cmd *cobra.Command, args []string) {
-		interactiveModeIfNeed()
+		interactiveModeIfNeed(cmd)
 	},
 }
 
@@ -29,9 +34,11 @@ func Execute() {
 	cobra.CheckErr(rootCmd.Execute())
 }
 
-func interactiveModeIfNeed() {
+func interactiveModeIfNeed(cmd *cobra.Command) {
 	if interactive {
 		doInteractive()
+	} else {
+		util.ExecOSCmd(igoHelpCommand)
 	}
 }
 
@@ -54,7 +61,7 @@ func doInteractive() {
 
 func execChildCommand(input string) {
 	if input != "" {
-		util.ExecOSCmd("igo " + input)
+		util.ExecOSCmd(igoCommandPrefix + input)
 	}
 }
 
@@ -75,6 +82,7 @@ func checkExit(input string) {
 
 func init() {
 	cobra.OnInitialize(initConfig)
+	rootCmd.CompletionOptions.DisableDefaultCmd = true
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.igo.yaml)")
 	rootCmd.Flags().BoolVarP(&interactive, "interactive", "i", false, "interactively execute commands")
 }

@@ -11,8 +11,8 @@ import (
 // dateCmd represents the date command
 var dateCmd = &cobra.Command{
 	Use:   "date",
-	Short: "transfer timestamp to date string",
-	Long: `transfer timestamp to date string`,
+	Short: "transfer timestamp to date",
+	Long: `transfer timestamp to date`,
 	Args: func(cmd *cobra.Command, args []string) error {
 		return validTimestamp(args)
 	},
