@@ -31,7 +31,6 @@ func Execute() {
 
 func interactiveModeIfNeed() {
 	if interactive {
-		interactive = !interactive
 		doInteractive()
 	}
 }
@@ -43,6 +42,11 @@ func doInteractive() {
 		input := readString(inputReader)
 
 		checkExit(input)
+
+		if input == "json" {
+			fmt.Println("json command does not support interactive mode")
+			continue
+		}
 
 		execChildCommand(input)
 	}
@@ -72,7 +76,7 @@ func checkExit(input string) {
 func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.igo.yaml)")
-	rootCmd.Flags().BoolVarP(&interactive, "interactive", "i", false, "Interactively execute commands")
+	rootCmd.Flags().BoolVarP(&interactive, "interactive", "i", false, "interactively execute commands")
 }
 
 // initConfig reads in config file and ENV variables if set.
