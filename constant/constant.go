@@ -7,4 +7,5 @@ const (
 	SpaceDelim =" "
 	SlashDelim = "/"
 	SemicolonDelim = ';'
+	JsonBufSize = 40960
 )

@@ -39,7 +39,7 @@ func handleJson() {
 }
 
 func readJsonFromTerminal() string {
-	inputReader := bufio.NewReader(os.Stdin)
+	inputReader := bufio.NewReaderSize(os.Stdin, constant.JsonBufSize)
 	input, err := inputReader.ReadString(constant.SemicolonDelim)
 	if err != nil {
 		panic(err)
