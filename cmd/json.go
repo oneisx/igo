@@ -11,7 +11,7 @@ import (
 )
 
 var Ugly bool
-var jsonOriginUsageFunc string
+var jsonUS string
 
 const (
     prettyMode = "pretty"
@@ -68,12 +68,12 @@ func SetDefaultPretty() {
 func init() {
     rootCmd.AddCommand(jsonCmd)
     jsonCmd.Flags().BoolVarP(&Ugly, "ugly", "u", false, "compress json")
-    jsonOriginUsageFunc = jsonCmd.UsageString()
+    jsonUS = jsonCmd.UsageString()
     jsonCmd.SetUsageFunc(jsonCusUsageFunc)
 }
 
 func jsonCusUsageFunc(command *cobra.Command) error {
-    fmt.Println(jsonOriginUsageFunc)
+    fmt.Println(jsonUS)
     fmt.Println(`Examples:
   Non-interactive:
     igo json

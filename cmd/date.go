@@ -8,7 +8,7 @@ import (
     "time"
 )
 
-var dateOriginUsageFunc string
+var dateUS string
 
 var dateCmd = &cobra.Command{
     Use:   "date",
@@ -17,16 +17,15 @@ var dateCmd = &cobra.Command{
     Args: func(cmd *cobra.Command, args []string) error {
         return validTimestamp(args)
     },
-    Run: func(cmd *cobra.Command, args []string) {
-        doTransferTimestamp(args[0])
+    RunE: func(cmd *cobra.Command, args []string) error {
+        return doTransferTimestamp(args[0])
     },
 }
 
-func doTransferTimestamp(timestamp string) {
+func doTransferTimestamp(timestamp string) error {
     i, err := strconv.ParseInt(timestamp, 10, 64)
     if err != nil {
-        _ = fmt.Errorf("timestamp is invalid")
-        return
+        return fmt.Errorf("timestamp<%s> is invalid", timestamp)
     }
     tLen := len(timestamp)
     var tm time.Time
@@ -37,6 +36,7 @@ func doTransferTimestamp(timestamp string) {
     }
     fmt.Println(tm)
     util.WriteClipboard(tm.String())
+    return nil
 }
 
 func validTimestamp(args []string) error {
@@ -54,12 +54,12 @@ func validTimestamp(args []string) error {
 
 func init() {
     rootCmd.AddCommand(dateCmd)
-    dateOriginUsageFunc = dateCmd.UsageString()
+    dateUS = dateCmd.UsageString()
     dateCmd.SetUsageFunc(dateUsageFunc)
 }
 
-var dateUsageFunc = func(cmd *cobra.Command) error {
-    fmt.Println(dateOriginUsageFunc)
+func dateUsageFunc(cmd *cobra.Command) error {
+    fmt.Println(dateUS)
     fmt.Println(`Examples:
   Non-interactive:
     igo date 1639238044
