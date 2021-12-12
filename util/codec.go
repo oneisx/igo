@@ -1,13 +1,18 @@
 package util
 
 import (
+    "bytes"
+    "crypto/aes"
+    "crypto/cipher"
     "crypto/hmac"
     "crypto/md5"
+    "crypto/rand"
     "crypto/sha1"
     "crypto/sha256"
     "crypto/sha512"
     "encoding/base64"
     "encoding/hex"
+    "io"
 )
 
 func SHA1(str string) string {
@@ -58,11 +63,54 @@ func HmacMD5(str string, key string) string {
     return hex.EncodeToString(h.Sum(nil))
 }
 
-func Base64Encode(s string) string {
+func EncryptBase64(s string) string {
     return base64.StdEncoding.EncodeToString([]byte(s))
 }
 
-func Base64Decode(s string) (string, error) {
+func DecryptBase64(s string) (string, error) {
     result, err := base64.StdEncoding.DecodeString(s)
     return string(result), err
+}
+
+func EncryptAES(str string, key string) (string, error) {
+    plainText := []byte(str)
+    keyByte := []byte(key)
+    block, err := aes.NewCipher(keyByte)
+    if err != nil {
+        return "", err
+    }
+    plainText = pkcs5Padding(plainText, block.BlockSize())
+    cipherText := make([]byte, aes.BlockSize+len(plainText))
+    iv := cipherText[:aes.BlockSize]
+    _, _ = io.ReadFull(rand.Reader, iv)
+    blockMode := cipher.NewCBCEncrypter(block, iv)
+    blockMode.CryptBlocks(cipherText[aes.BlockSize:], plainText)
+    return base64.StdEncoding.EncodeToString(cipherText), nil
+}
+
+func DecryptAES(str string, key string) (string, error) {
+    cipherText, _ := base64.StdEncoding.DecodeString(str)
+    keyByte := []byte(key)
+    block, err := aes.NewCipher(keyByte)
+    if err != nil {
+        return "", err
+    }
+    iv := cipherText[:aes.BlockSize]
+    cipherText = cipherText[aes.BlockSize:]
+    blockMode := cipher.NewCBCDecrypter(block, iv)
+    blockMode.CryptBlocks(cipherText, cipherText)
+    cipherText = pkcs5UnPadding(cipherText)
+    return string(cipherText), nil
+}
+
+func pkcs5Padding(cipherText []byte, blockSize int) []byte {
+    padding := blockSize - len(cipherText)%blockSize
+    padText := bytes.Repeat([]byte{byte(padding)}, padding)
+    return append(cipherText, padText...)
+}
+
+func pkcs5UnPadding(decrypted []byte) []byte {
+    length := len(decrypted)
+    unPadding := int(decrypted[length-1])
+    return decrypted[:(length - unPadding)]
 }

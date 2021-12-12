@@ -7,29 +7,29 @@ import (
     "github.com/spf13/cobra"
 )
 
-var decode bool
+var decryptBase64 bool
 var base64US string
 
 var base64Cmd = &cobra.Command{
     Use:   "base64",
     Short: "Generate base64 ciphertext、decrypt base64 ciphertext",
-    Long:  `Generate base64 ciphertext、decrypt base64 ciphertext, use flag (-d/--decode) to decrypt`,
+    Long:  `Generate base64 ciphertext、decrypt base64 ciphertext, use flag (-d/--decrypt) to decrypt`,
     Args:  cobra.ExactArgs(1),
     RunE: func(cmd *cobra.Command, args []string) error {
-        return doCodec(args[0])
+        return doBase64Codec(args[0])
     },
 }
 
-func doCodec(str string) error {
+func doBase64Codec(str string) error {
     var result string
     var err error
-    if decode {
-        result, err = util.Base64Decode(str)
+    if decryptBase64 {
+        result, err = util.DecryptBase64(str)
         if err != nil {
             return fmt.Errorf("invalid base64 ciphertext")
         }
     } else {
-        result = util.Base64Encode(str)
+        result = util.EncryptBase64(str)
     }
     fmt.Println(result)
     util.WriteClipboard(result)
@@ -38,7 +38,7 @@ func doCodec(str string) error {
 
 func init() {
     codecCmd.AddCommand(base64Cmd)
-    base64Cmd.Flags().BoolVarP(&decode, "decode", "d", false, "decrypt base64 ciphertext")
+    base64Cmd.Flags().BoolVarP(&decryptBase64, "decrypt", "d", false, "decrypt base64 ciphertext")
     base64US = base64Cmd.UsageString()
     base64Cmd.SetUsageFunc(base64UsageFunc)
 }
