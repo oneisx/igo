@@ -44,10 +44,10 @@ func md5UsageFunc(command *cobra.Command) error {
   Non-interactive:
     igo codec md5 oneisx
     igo codec md5 oneisx -k thanks
-    igo codec md5 oneisx -key thanks
+    igo codec md5 oneisx --key thanks
   Interactive:
     codec md5 oneisx
     codec md5 oneisx -k thanks
-    codec md5 oneisx -key thanks`)
+    codec md5 oneisx --key thanks`)
     return nil
 }
