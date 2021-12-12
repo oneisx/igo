@@ -7,13 +7,10 @@ import (
 
 var codecCmd = &cobra.Command{
 	Use:   "codec",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "A collection of encryption and decryption tools",
+	Long: `A collection of encryption and decryption tools, 
+including MD5/HmacMD5, Base64, SHA1/HmacSHA1, SHA256/HmacSHA256, 
+SHA512/HmacSHA512, AES, etc.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("codec called")
 	},

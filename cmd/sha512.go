@@ -12,8 +12,8 @@ var sha512Key string
 
 var sha512Cmd = &cobra.Command{
 	Use:   "sha512",
-	Short: "Generate SHA512 ciphertext",
-	Long: `Generate SHA512 ciphertext, Generate HmacSHA512 ciphertext with flag(-k/--key)`,
+	Short: "Generate SHA512/HmacSHA512 ciphertext",
+	Long: `Generate SHA512/HmacSHA512 ciphertext, Generate HmacSHA512 ciphertext with flag(-k/--key)`,
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		encodeSHA512(args[0])

@@ -12,8 +12,8 @@ var sha1Key string
 
 var sha1Cmd = &cobra.Command{
 	Use:   "sha1",
-	Short: "Generate SHA1 ciphertext",
-	Long: `Generate SHA1 ciphertext, Generate HmacSHA1 ciphertext with flag(-k/--key)`,
+	Short: "Generate SHA1/HmacSHA1 ciphertext",
+	Long: `Generate SHA1/HmacSHA1 ciphertext, Generate HmacSHA1 ciphertext with flag(-k/--key)`,
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		encodeSHA1(args[0])

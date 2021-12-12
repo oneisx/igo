@@ -12,8 +12,8 @@ var md5Key string
 
 var md5Cmd = &cobra.Command{
 	Use:   "md5",
-	Short: "Generate MD5 ciphertext",
-	Long: `Generate MD5 ciphertext, Generate HmacMD5 ciphertext with flag(-k/--key)`,
+	Short: "Generate MD5/HmacMD5 ciphertext",
+	Long: `Generate MD5/HmacMD5 ciphertext, Generate HmacMD5 ciphertext with flag(-k/--key)`,
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		encodeMD5(args[0])

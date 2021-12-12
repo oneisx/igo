@@ -12,8 +12,8 @@ var sha256Key string
 
 var sha256Cmd = &cobra.Command{
 	Use:   "sha256",
-	Short: "Generate SHA256 ciphertext",
-	Long: `Generate SHA256 ciphertext, Generate HmacSHA256 ciphertext with flag(-k/--key)`,
+	Short: "Generate SHA256/HmacSHA256 ciphertext",
+	Long: `Generate SHA256/HmacSHA256 ciphertext, Generate HmacSHA256 ciphertext with flag(-k/--key)`,
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		encodeSHA256(args[0])
