@@ -1,46 +1,59 @@
 package util
 
 import (
+    "fmt"
     "os"
     "os/exec"
     "runtime"
 )
 
 const (
+    windows            = "windows"
+    linux              = "linux"
+    macos              = "darwin"
     winOSCommand       = "cmd.exe"
     winCommandOption   = "/c"
     winClearCommand    = "cls"
     linuxOSCommand     = "/bin/bash"
     linuxCommandOption = "-c"
     linuxClearCommand  = "clear"
-    macOSCommand = "/usr/bin/open"
+    macOSCommand       = "/usr/bin/open"
     macOSCommandOption = "-a"
-
 )
 
 func ClearScreen() {
     var cmd *exec.Cmd
-    if isWindows() {
+    switch runtime.GOOS {
+    case windows:
         cmd = buildWindowsCmd(winClearCommand)
-    } else {
+    case macos:
+        fallthrough
+    case linux:
         cmd = buildLinuxCmd(linuxClearCommand)
+    default:
+        fmt.Println("Error: Operation system is not supported!")
+        os.Exit(1)
     }
     doExecOSCmd(cmd)
 }
 
 func ExecOSCmd(command string) {
-    cmd := buildCmd(command)
+    cmd := buildIgoCmd(command)
     doExecOSCmd(cmd)
 }
 
-func buildCmd(command string) *exec.Cmd {
+func buildIgoCmd(command string) *exec.Cmd {
     var cmd *exec.Cmd
-    if isWindows() {
+    switch runtime.GOOS {
+    case windows:
         cmd = buildWindowsCmd(command)
-    } else if isLinux() {
+    case linux:
         cmd = buildLinuxCmd(command)
-    } else {
+    case macos:
         cmd = buildMacOSCmd(command)
+    default:
+        fmt.Println("Error: Operation system is not supported!")
+        os.Exit(1)
     }
     return cmd
 }
@@ -63,7 +76,7 @@ func buildWindowsCmd(command string) *exec.Cmd {
 func doExecOSCmd(cmd *exec.Cmd) bool {
     //显示运行的命令
     //fmt.Println(cmd.Args)
-
+    
     cmd.Stdout = os.Stdout
     cmd.Stderr = os.Stderr
     err := cmd.Run()
@@ -71,12 +84,4 @@ func doExecOSCmd(cmd *exec.Cmd) bool {
         return false
     }
     return true
-}
-
-func isWindows() bool {
-    return runtime.GOOS == "windows"
-}
-
-func isLinux() bool {
-    return runtime.GOOS == "linux"
 }
