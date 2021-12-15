@@ -58,7 +58,7 @@ func doHandleJson(str string) {
     }
     json := string(result)
     fmt.Println(json)
-    util.WriteClipboard(json)
+    util.WriteText2Clipboard(json)
 }
 
 func SetDefaultPretty() {

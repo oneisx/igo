@@ -52,7 +52,7 @@ func generateUUID() {
     }
     str := strings.Join(uuids, "\n")
     fmt.Println(str)
-    util.WriteClipboard(str)
+    util.WriteText2Clipboard(str)
 }
 
 func UUID() string {

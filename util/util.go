@@ -1,20 +1,9 @@
 package util
 
 import (
-    "github.com/atotto/clipboard"
-    "strconv"
+	"golang.design/x/clipboard"
 )
 
-func IsNum(str string) bool {
-    _, err := strconv.Atoi(str)
-    return err == nil
-}
-
-func Atoi(str string) int {
-    v, _ := strconv.Atoi(str)
-    return v
-}
-
-func WriteClipboard(str string) {
-    _ = clipboard.WriteAll(str)
+func WriteText2Clipboard(str string) {
+	clipboard.Write(clipboard.FmtText, []byte(str))
 }

@@ -93,7 +93,7 @@ func readString(reader *bufio.Reader) string {
     if err != nil {
         os.Exit(1)
     }
-    return input[:len(input)-2]
+    return util.RemoveLineBreak(input)
 }
 
 func checkExit(input string) {

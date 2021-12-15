@@ -28,7 +28,7 @@ func encodeSHA1(str string) {
         result = util.SHA1(str)
     }
     fmt.Println(result)
-    util.WriteClipboard(result)
+    util.WriteText2Clipboard(result)
 }
 
 func init() {

@@ -28,7 +28,7 @@ func encodeMD5(str string) {
         result = util.MD5(str)
     }
     fmt.Println(result)
-    util.WriteClipboard(result)
+    util.WriteText2Clipboard(result)
 }
 
 func init() {

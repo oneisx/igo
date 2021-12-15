@@ -35,7 +35,7 @@ func doTransferTimestamp(timestamp string) error {
         tm = time.UnixMilli(i)
     }
     fmt.Println(tm)
-    util.WriteClipboard(tm.String())
+    util.WriteText2Clipboard(tm.String())
     return nil
 }
 

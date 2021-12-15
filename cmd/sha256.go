@@ -28,7 +28,7 @@ func encodeSHA256(str string) {
         result = util.SHA256(str)
     }
     fmt.Println(result)
-    util.WriteClipboard(result)
+    util.WriteText2Clipboard(result)
 }
 
 func init() {

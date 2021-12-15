@@ -32,7 +32,7 @@ func doBase64Codec(str string) error {
         result = util.EncryptBase64(str)
     }
     fmt.Println(result)
-    util.WriteClipboard(result)
+    util.WriteText2Clipboard(result)
     return nil
 }
 

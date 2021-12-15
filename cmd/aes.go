@@ -33,7 +33,7 @@ func doAesCodec(str string) error {
         return err
     }
     fmt.Println(result)
-    util.WriteClipboard(result)
+    util.WriteText2Clipboard(result)
     return nil
 }
 
