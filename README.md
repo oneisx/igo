@@ -82,6 +82,26 @@ igo>json -u
 igo>json:ugly>
 ```
 After this, you can input your json string, and append semicolon(;) in the end, press the Enter, wonderful thing will happen. 
+```shell
+# Example
+igo>json:pretty>{"qenoap":-844276330,"iokgphia":true,"fhabfiw":1681064845.6926622,"zwdskzh":"xct","xgvzsgbfo":-1079466053.3847966};
+{
+  "qenoap": -844276330,
+  "iokgphia": true,
+  "fhabfiw": 1681064845.6926622,
+  "zwdskzh": "xct",
+  "xgvzsgbfo": -1079466053.3847966
+}
+
+igo>json:ugly>{
+"qenoap": -844276330,
+"iokgphia": true,
+"fhabfiw": 1681064845.6926622,
+"zwdskzh": "xct",
+"xgvzsgbfo": -1079466053.3847966
+};
+{"qenoap":-844276330,"iokgphia":true,"fhabfiw":1681064845.6926622,"zwdskzh":"xct","xgvzsgbfo":-1079466053.3847966}
+```
 
 ## 4. DATE
 We can't directly see the date represented by the timestamp. The date command is used to convert the timestamp. It supports second and millisecond timestamps
