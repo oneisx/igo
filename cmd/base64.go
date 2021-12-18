@@ -10,6 +10,7 @@ import (
 var decryptBase64 bool
 var base64US string
 
+// since v1.0.0
 var base64Cmd = &cobra.Command{
     Use:   "base64",
     Short: "Generate base64 ciphertext, decrypt base64 ciphertext",

@@ -10,6 +10,7 @@ import (
 var md5US string
 var md5Key string
 
+// since v1.0.0
 var md5Cmd = &cobra.Command{
     Use:   "md5",
     Short: "Generate MD5/HmacMD5 ciphertext",

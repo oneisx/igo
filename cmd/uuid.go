@@ -13,6 +13,7 @@ import (
 var number int
 var uuidUS string
 
+// since v1.0.0
 var uuidCmd = &cobra.Command{
     Use:   "uuid",
     Short: "generate uuid",

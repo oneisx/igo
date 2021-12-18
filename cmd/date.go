@@ -10,6 +10,7 @@ import (
 
 var dateUS string
 
+// since v1.0.0
 var dateCmd = &cobra.Command{
     Use:   "date",
     Short: "transfer timestamp to date",

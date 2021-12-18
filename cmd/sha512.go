@@ -10,6 +10,7 @@ import (
 var sha512US string
 var sha512Key string
 
+// since v1.0.0
 var sha512Cmd = &cobra.Command{
     Use:   "sha512",
     Short: "Generate SHA512/HmacSHA512 ciphertext",

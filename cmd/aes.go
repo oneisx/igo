@@ -11,6 +11,7 @@ var decryptAES bool
 var aesUS string
 var aesKey string
 
+// since v1.0.0
 var aesCmd = &cobra.Command{
     Use:   "aes",
     Short: "Generate aes ciphertext, decrypt aes ciphertext",

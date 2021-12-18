@@ -10,6 +10,7 @@ import (
 var sha1US string
 var sha1Key string
 
+// since v1.0.0
 var sha1Cmd = &cobra.Command{
     Use:   "sha1",
     Short: "Generate SHA1/HmacSHA1 ciphertext",

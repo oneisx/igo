@@ -4,6 +4,7 @@ import (
     "github.com/spf13/cobra"
 )
 
+// since v1.0.0
 var codecCmd = &cobra.Command{
     Use:   "codec",
     Short: "A collection of encryption and decryption tools",

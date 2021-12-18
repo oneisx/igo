@@ -18,6 +18,7 @@ const (
     uglyMode   = "ugly"
 )
 
+// since v1.0.0
 var jsonCmd = &cobra.Command{
     Use:   "json",
     Short: "beautify json",

@@ -6,7 +6,7 @@ import (
     "github.com/spf13/cobra"
 )
 
-// clearCmd represents the clear command
+// since v1.0.0
 var clearCmd = &cobra.Command{
     Use:   "clear",
     Short: "clear screen",

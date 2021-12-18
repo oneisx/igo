@@ -10,6 +10,7 @@ import (
 var sha256US string
 var sha256Key string
 
+// since v1.0.0
 var sha256Cmd = &cobra.Command{
     Use:   "sha256",
     Short: "Generate SHA256/HmacSHA256 ciphertext",
