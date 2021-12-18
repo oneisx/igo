@@ -8,33 +8,86 @@ import (
 )
 
 const (
-    windows            = "windows"
+    windows          = "windows"
+    winOSCommand     = "cmd.exe"
+    winCommandOption = "/c"
+    winClearCommand  = "cls"
+    
     linux              = "linux"
-    macos              = "darwin"
-    winOSCommand       = "cmd.exe"
-    winCommandOption   = "/c"
-    winClearCommand    = "cls"
     linuxOSCommand     = "/bin/bash"
     linuxCommandOption = "-c"
-    linuxClearCommand  = "clear"
+    
+    macos              = "darwin"
     macOSCommand       = "/usr/bin/open"
     macOSCommandOption = "-a"
+    
+    ClearCommand = "clear"
 )
 
-func ClearScreen() {
-    var cmd *exec.Cmd
+type OperationSystem interface {
+    ClearScreen()
+    ExecOSCmd(command string)
+}
+
+type Windows struct{}
+
+type Linux struct{}
+
+type MacOS struct{}
+
+func (windows *Windows) ClearScreen() {
+    cmd := buildWindowsCmd(winClearCommand)
+    doExecOSCmd(cmd)
+}
+
+func (linux *Linux) ClearScreen() {
+    cmd := buildLinuxCmd(ClearCommand)
+    doExecOSCmd(cmd)
+}
+
+func (macos *MacOS) ClearScreen() {
+    cmd := buildMacOSCmd(ClearCommand)
+    doExecOSCmd(cmd)
+}
+
+func (windows *Windows) ExecOSCmd(command string) {
+    cmd := buildWindowsCmd(command)
+    doExecOSCmd(cmd)
+}
+
+func (linux *Linux) ExecOSCmd(command string) {
+    cmd := buildLinuxCmd(command)
+    doExecOSCmd(cmd)
+}
+
+func (macos *MacOS) ExecOSCmd(command string) {
+    cmd := buildMacOSCmd(command)
+    doExecOSCmd(cmd)
+}
+
+func chooseOS() OperationSystem {
     switch runtime.GOOS {
     case windows:
-        cmd = buildWindowsCmd(winClearCommand)
-    case macos:
-        fallthrough
+        return new(Windows)
     case linux:
-        cmd = buildLinuxCmd(linuxClearCommand)
+        return new(Linux)
+    case macos:
+        return new(MacOS)
     default:
         fmt.Println("Error: Operation system is not supported!")
         os.Exit(1)
     }
-    doExecOSCmd(cmd)
+    return nil
+}
+
+func ClearScreen() {
+    operationSystem := chooseOS()
+    operationSystem.ClearScreen()
+}
+
+func ExecOSCmd(command string) {
+    operationSystem := chooseOS()
+    operationSystem.ExecOSCmd(command)
 }
 
 func RemoveLineBreak(str string) string {
@@ -43,27 +96,6 @@ func RemoveLineBreak(str string) string {
         lineBreakLength = 2
     }
     return str[:len(str)-lineBreakLength]
-}
-
-func ExecOSCmd(command string) {
-    cmd := buildIgoCmd(command)
-    doExecOSCmd(cmd)
-}
-
-func buildIgoCmd(command string) *exec.Cmd {
-    var cmd *exec.Cmd
-    switch runtime.GOOS {
-    case windows:
-        cmd = buildWindowsCmd(command)
-    case linux:
-        cmd = buildLinuxCmd(command)
-    case macos:
-        cmd = buildMacOSCmd(command)
-    default:
-        fmt.Println("Error: Operation system is not supported!")
-        os.Exit(1)
-    }
-    return cmd
 }
 
 func buildMacOSCmd(command string) *exec.Cmd {
@@ -84,7 +116,7 @@ func buildWindowsCmd(command string) *exec.Cmd {
 func doExecOSCmd(cmd *exec.Cmd) bool {
     //显示运行的命令
     //fmt.Println(cmd.Args)
-
+    
     cmd.Stdout = os.Stdout
     cmd.Stderr = os.Stderr
     err := cmd.Run()
