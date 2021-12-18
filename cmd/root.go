@@ -34,10 +34,6 @@ func Execute() {
 }
 
 func handleFlags() {
-    if quit {
-        fmt.Println("bye")
-        return
-    }
     if version {
         printVersion()
     }
@@ -47,7 +43,7 @@ func handleFlags() {
     }
 
     if !version && !interactive {
-        util.ExecOSCmd(cst.AppName + cst.SpaceDelim + cst.HelpCommand)
+       util.ExecOSCmd(cst.AppName + cst.SpaceDelim + cst.HelpCommand)
     }
 }
 
