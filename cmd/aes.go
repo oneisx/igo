@@ -13,8 +13,8 @@ var aesKey string
 
 var aesCmd = &cobra.Command{
     Use:   "aes",
-    Short: "Generate aes ciphertext、decrypt aes ciphertext",
-    Long:  `Generate aes ciphertext、decrypt aes ciphertext, use flag (-d/--decrypt) to decrypt`,
+    Short: "Generate aes ciphertext, decrypt aes ciphertext",
+    Long:  `Generate aes ciphertext, decrypt aes ciphertext, use flag (-d/--decrypt) to decrypt`,
     Args:  cobra.ExactArgs(1),
     RunE: func(cmd *cobra.Command, args []string) error {
         return doAesCodec(args[0])

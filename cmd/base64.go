@@ -12,8 +12,8 @@ var base64US string
 
 var base64Cmd = &cobra.Command{
     Use:   "base64",
-    Short: "Generate base64 ciphertext、decrypt base64 ciphertext",
-    Long:  `Generate base64 ciphertext、decrypt base64 ciphertext, use flag (-d/--decrypt) to decrypt`,
+    Short: "Generate base64 ciphertext, decrypt base64 ciphertext",
+    Long:  `Generate base64 ciphertext, decrypt base64 ciphertext, use flag (-d/--decrypt) to decrypt`,
     Args:  cobra.ExactArgs(1),
     RunE: func(cmd *cobra.Command, args []string) error {
         return doBase64Codec(args[0])

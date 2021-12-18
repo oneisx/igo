@@ -7,9 +7,9 @@ import (
 )
 
 var memoCmd = &cobra.Command{
-    Use:   "memo",
-    Short: "memo",
-    Long:  `memo`,
+    Use:   "memo [WIP]",
+    Short: "memo [WIP]",
+    Long:  `memo [WIP]`,
     Run: func(cmd *cobra.Command, args []string) {
         fmt.Println("memo called")
     },
