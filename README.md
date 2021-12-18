@@ -29,7 +29,8 @@ Use "igo [command] --help" for more information about a command.
 
 ## 1. Enter interactive mode
 Igo supports two modes, interactive and non-interactive. In the first mode, you do not need to enter the root command igo.
-`Tips: You need to put igo into $PATH first`
+
+`Tips: You'd better put igo into $PATH first`
 ```shell
 # Input in the terminal
 igo -i
