@@ -48,6 +48,7 @@ func handleFlags() {
 }
 
 func doInteractive() {
+    printVersion()
     inputReader := bufio.NewReader(os.Stdin)
     for {
         fmt.Print("igo>")
@@ -138,3 +139,4 @@ func initConfig() {
 func printVersion() {
     fmt.Println(cst.AppName + cst.SpaceDelim + cst.AppVersion + cst.SpaceDelim + runtime.GOOS + cst.SlashDelim + runtime.GOARCH + cst.CommaDelim + cst.PoweredBy)
 }
+

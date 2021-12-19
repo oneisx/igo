@@ -1,7 +1,7 @@
 package cst
 
 const (
-    AppVersion     = "v1.0.0"
+    AppVersion     = "v1.0.1"
     AppName        = "igo"
     HelpCommand    = "help"
     JsonCommand    = "json"
