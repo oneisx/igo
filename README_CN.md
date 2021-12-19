@@ -1,12 +1,12 @@
 # igo
 
-英文 | [中文](README_CN.md)
+[English](README.md) | Chinese
 
-Welcome to igo, igo is a good helper, can generate UUID, beautify JSON, convert timestamp, encryption and decryption, etc.
-No need to copy manually, the generated content will be placed in the clipboard.
-For more functions, please see the help.
+欢迎来到Igo，Igo是一个好帮手，它能生成UUID，美化JSON，转换时间戳，加解密等等。
+生成的内容不需要手动复制，Igo会为我们把它放到剪切板中。
+更多功能，请查看帮助文档。
 
-By the way, it will be more convenient to use Igo through [Igo Agent](https://github.com/oneisx/igoagent).
+顺便提一下，通过 [Igo Agent](https://github.com/oneisx/igoagent) 使用Igo会更方便哦。
 
 ```shell
 Usage:
@@ -33,21 +33,21 @@ Use "igo [command] --help" for more information about a command.
 ```
 
 ## 1. Enter interactive mode
-Igo supports two modes, interactive and non-interactive. In the first mode, you do not need to enter the root command igo.
+Igo提供两种使用模式，交互式和非交互式。在交互模式中，你不需要输入根命令igo。
 
-`Tip: put Igo in the system variable $PATH for a better experience`
+`提示: 将igo放到系统变量$PATH中，会获得更好的体验`
 ```shell
-# Input in the terminal
+# 在终端输入
 igo -i
 
-# result
+# 结果
 igo>
 ```
 
 ## 2. UUID
-You can generate uuid string like this:
+你可以像这样生成UUID：
 ```shell
-# Non-interactive
+# 非交互式
 igo uuid
 14ef893c-62d5-4eaa-83a7-ddb0a87693e7
 
@@ -56,7 +56,7 @@ b1f5298d-40d5-4ba6-90f2-0aa0e40b4393
 d5a75d77-c454-4163-90ea-98336b95c8f3
 3d2c87b3-988b-475f-b664-b45c12e905aa
 
-# Interactive
+# 交互式
 igo> uuid
 14ef893c-62d5-4eaa-83a7-ddb0a87693e7
 
@@ -65,32 +65,32 @@ b1f5298d-40d5-4ba6-90f2-0aa0e40b4393
 d5a75d77-c454-4163-90ea-98336b95c8f3
 3d2c87b3-988b-475f-b664-b45c12e905aa
 ```
-After this, the content already in the clipboard.
+命令执行完后，剪切板中就有相应的内容了。
 
 ## 3. JSON
-JSON is widely used. We often need to beautify JSON in our daily work so that we can clearly see the relevant information. Here also provides the ability to compress JSON
+JSON被广泛使用，我们经常需要在日常工作中美化JSON，以便我们能够清楚地看到相关信息，这里还提供了压缩JSON的功能
 ```shell
-# Non-interactive:
-## beautify
+# 非交互式:
+## 美化
 igo json
 igo>json:pretty>
 
-## compress
+## 压缩
 igo json -u
 igo>json:ugly>
 
-# Interactive:
-## beautify
+# 交互式:
+## 美化
 igo>json
 igo>json:pretty>
 
-## compress
+## 压缩
 igo>json -u
 igo>json:ugly>
 ```
-After this, you can input your json string, and append semicolon(;) in the end, press the Enter, wonderful thing will happen. 
+在此之后，您可以输入json字符串，并在最后带上分号(;)，按下回车键，美好的事情就会发生。
 ```shell
-# Example
+# 例子
 igo>json:pretty>{"qenoap":-844276330,"iokgphia":true,"fhabfiw":1681064845.6926622,"zwdskzh":"xct","xgvzsgbfo":-1079466053.3847966};
 {
   "qenoap": -844276330,
@@ -111,15 +111,15 @@ igo>json:ugly>{
 ```
 
 ## 4. DATE
-We can't directly see the date represented by the timestamp. The date command is used to convert the timestamp. It supports second and millisecond timestamps
+我们无法直接看到时间戳表示的日期，date命令用于转换时间戳，它支持秒和毫秒时间戳。
 ```shell
-# Non-interactive:
+# 非交互式:
 igo date 1639238044
 2021-12-11 23:54:04 +0800 CST
 igo date 1639188919040
 2021-12-11 10:15:19.04 +0800 CST
 
-# Interactive:
+# 交互式:
 igo>date 1639238044
 2021-12-11 23:54:04 +0800 CST
 igo>date 1639188919040
@@ -127,7 +127,7 @@ igo>date 1639188919040
 ```
 
 ## 5. CODEC
-A collection of encryption and decryption tools, including MD5/HmacMD5, Base64, SHA1/HmacSHA1, SHA256/HmacSHA256, SHA512/HmacSHA512, AES, etc.
+加密和解密工具的集合，包括MD5/HmacMD5、Base64、SHA1/HmacSHA1、SHA256/HmacSHA256、SHA512/HmacSHA512、AES等。
 ```shell
 Usage:
 igo codec [command]
@@ -149,43 +149,43 @@ Global Flags:
 Use "igo codec [command] --help" for more information about a command.
 ```
 ### 5.1 AES
-Generate aes ciphertext, decrypt aes ciphertext, use flag (-d/--decrypt) to decrypt.
-It should be noted that, length of the key should be in (16,24,32), the default value is not recommended.
+生成aes密文，解密aes密文，使用flag（-d/--decrypt）进行解密。
+需要注意的是，键的长度应为（16,24,32），不建议使用默认值。
 ```shell
-# Non-interactive:
+# 非交互式:
 igo codec aes oneisx
 igo codec aes uZERhkcVewZ7S1j1co+QSkKdvf/52DqkDXgAcJktido= -d
 igo codec aes oneisx -k 52DqkDXgAcJktido (Recommend custom key)
 igo codec aes OYA/OY1bj6J1wRywYYCIwMC9oW8RqoByngxsBUlGhuw= -dk 52DqkDXgAcJktido (Recommend custom key)
 
-# Interactive:
+# 交互式:
 igo>codec aes oneisx
 igo>codec aes -d uZERhkcVewZ7S1j1co+QSkKdvf/52DqkDXgAcJktido= -d
 igo>codec aes oneisx -k 52DqkDXgAcJktido (Recommend custom key)
 igo>codec aes OYA/OY1bj6J1wRywYYCIwMC9oW8RqoByngxsBUlGhuw= -dk 52DqkDXgAcJktido (Recommend custom key)
 ```
 ### 5.2 BASE64
-Generate base64 ciphertext, decrypt base64 ciphertext, use flag (-d/--decrypt) to decrypt
+生成base64密文，解密base64密文，使用flag（-d/--decrypt）进行解密
 ```shell
-# Non-interactive:
+# 非交互式:
 igo codec base64 oneisx
 igo codec base64 -d b25laXN4
 
-# Interactive:
+# 交互式:
 igo>codec base64 oneisx
 igo>codec base64 -d b25laXN4
 ```
 ### 5.3 MD5
-Generate MD5/HmacMD5 ciphertext, Generate HmacMD5 ciphertext by flag(-k/--key)
+生成MD5/HmacMD5密文，通过flag（-k/--key）生成HmacMD5密文
 ```shell
-# Non-interactive:
+# 非交互式:
 ## MD5
 igo codec md5 oneisx
 ## HmacMD5
 igo codec md5 oneisx -k thanks
 igo codec md5 oneisx --key thanks
 
-# Interactive:
+# 交互式:
 ## MD5
 igo>codec md5 oneisx
 ## HmacMD5
@@ -193,16 +193,16 @@ igo>codec md5 oneisx -k thanks
 igo>codec md5 oneisx --key thanks
 ```
 ### 5.4 SHA1
-Generate SHA1/HmacSHA1 ciphertext, Generate HmacSHA1 ciphertext by flag(-k/--key)
+生成SHA1/HmacSHA1密文，通过flag（-k/--key）生成HmacSHA1密文
 ```shell
-# Non-interactive:
+# 非交互式:
 ## SHA1
 igo codec sha1 oneisx
 ## HmacSHA1
 igo codec sha1 oneisx -k thanks
 igo codec sha1 oneisx --key thanks
 
-# Interactive:
+# 交互式:
 ## SHA1
 igo>codec sha1 oneisx
 ## HmacSHA1
@@ -210,16 +210,16 @@ igo>codec sha1 oneisx -k thanks
 igo>codec sha1 oneisx --key thanks
 ```
 ### 5.5 SHA256
-Generate SHA256/HmacSHA256 ciphertext, Generate HmacSHA256 ciphertext by flag(-k/--key)
+生成SHA256/HmacSHA256密文，通过flag（-k/--key）生成HmacSHA256密文
 ```shell
-# Non-interactive:
+# 非交互式:
 ## SHA256
 igo codec sha256 oneisx
 ## HmacSHA256
 igo codec sha256 oneisx -k thanks
 igo codec sha256 oneisx --key thanks
 
-# Interactive:
+# 交互式:
 ## SHA256
 igo>codec sha256 oneisx
 ## HmacSHA256
@@ -227,16 +227,16 @@ igo>codec sha256 oneisx -k thanks
 igo>codec sha256 oneisx --key thanks
 ```
 ### 5.6 SHA512
-Generate SHA512/HmacSHA512 ciphertext, Generate HmacSHA512 ciphertext by flag(-k/--key)
+生成SHA512/HmacSHA512密文，通过flag（-k/--key）生成HmacSHA512密文
 ```shell
-# Non-interactive:
+# 非交互式:
 ## SHA512
 igo codec sha512 oneisx
 ## HmacSHA512
 igo codec sha512 oneisx -k thanks
 igo codec sha512 oneisx --key thanks
 
-# Interactive:
+# 交互式:
 ## SHA512
 igo>codec sha512 oneisx
 ## HmacSHA512
