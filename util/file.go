@@ -9,18 +9,83 @@ import (
     "os"
 )
 
-func GetYaml(key string) interface{} {
-    m := readYaml()
+type MemoData struct {
+    Key  string
+    Data string
+}
+
+func GetSQL(num int) MemoData {
+    return getMemoData(num, sqlFilePath())
+}
+
+func PutSQL(memoData MemoData) {
+    putMemoData(memoData, sqlFilePath())
+}
+
+func GetMemo(num int) MemoData {
+    return getMemoData(num, memoFilePath())
+}
+
+func PutMemo(memoData MemoData) {
+    putMemoData(memoData, memoFilePath())
+}
+
+func getMemoData(num int, filename string) MemoData {
+    m := readMemoData(filename)
+    return m[num]
+}
+
+func putMemoData(memoData MemoData, filename string) {
+    ms := readMemoData(filename)
+    if checkKeyExist(ms, memoData.Key) {
+        err := fmt.Errorf("error: key=%v already existed", memoData.Key)
+        fmt.Println(err)
+        return
+    }
+    num := len(ms) + 1
+    ms[num] = memoData
+    writeMemoData(ms, filename)
+}
+
+func checkKeyExist(ms map[int]MemoData, key string) bool {
+    for _, m := range ms {
+        if m.Key == key {
+            return true
+        }
+    }
+    return false
+}
+
+func readMemoData(filename string) map[int]MemoData {
+    ms := make(map[int]MemoData)
+    data := read(filename)
+    err := yaml.Unmarshal(data, &ms)
+    if err != nil {
+        log.Fatalf("error: %v", err)
+    }
+    return ms
+}
+
+func writeMemoData(ms map[int]MemoData, filename string) {
+    d, err := yaml.Marshal(ms)
+    if err != nil {
+        log.Fatalf("error: %v", err)
+    }
+    write(filename, d)
+}
+
+func GetConfig(key string) interface{} {
+    m := readConfig()
     return m[key]
 }
 
-func PutYaml(key string, value interface{}) {
-    m := readYaml()
+func PutConfig(key string, value interface{}) {
+    m := readConfig()
     m[key] = value
-    writeYaml(m)
+    writeConfig(m)
 }
 
-func readYaml() map[string]interface{} {
+func readConfig() map[string]interface{} {
     m := make(map[string]interface{})
     data := read(configFilePath())
     err := yaml.Unmarshal(data, &m)
@@ -30,7 +95,7 @@ func readYaml() map[string]interface{} {
     return m
 }
 
-func writeYaml(in map[string]interface{}) {
+func writeConfig(in map[string]interface{}) {
     d, err := yaml.Marshal(in)
     if err != nil {
         log.Fatalf("error: %v", err)
@@ -65,15 +130,24 @@ func write(filename string, data []byte) {
     _, _ = writer.Write(data)
 }
 
-func configFilePath() string {
-    return igoHomeDir() + string(os.PathSeparator) + ".config.yaml"
+func sqlFilePath() string {
+    return igoHomeDir() + string(os.PathSeparator) + ".sql.yaml"
 }
 
-func userHomeDir() string{
-    dir, _ := os.UserHomeDir()
-    return dir
+func memoFilePath() string {
+    return igoHomeDir() + string(os.PathSeparator) + ".memo.yaml"
+}
+
+func configFilePath() string {
+    return igoHomeDir() + string(os.PathSeparator) + ".config.yaml"
 }
 
 func igoHomeDir() string {
     return userHomeDir() + string(os.PathSeparator) + ".igo"
 }
+
+func userHomeDir() string {
+    dir, _ := os.UserHomeDir()
+    return dir
+}
+

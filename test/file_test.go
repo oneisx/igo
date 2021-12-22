@@ -5,10 +5,15 @@ import (
     "testing"
 )
 
-func Test_PutYaml(t *testing.T)  {
-    util.PutYaml("PowerBoot", true)
+func Test_ConfigFile(t *testing.T) {
+    util.PutConfig("PowerBoot", true)
     t.Log("执行成功")
-    res := util.GetYaml("PowerBoot")
+    res := util.GetConfig("PowerBoot")
     t.Log(res)
-    util.PutYaml("Reminder", true)
+    util.PutConfig("Reminder", true)
+}
+
+func Test_SQLFile(t *testing.T) {
+    util.PutSQL(util.MemoData{Key: "实例详情", Data: "select * from dbs_instance"})
+    util.PutSQL(util.MemoData{Key: "备份详情", Data: "select * from dbs_backup_info"})
 }

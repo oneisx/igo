@@ -115,7 +115,7 @@ func buildWindowsCmd(command string) *exec.Cmd {
 
 func doExecOSCmd(cmd *exec.Cmd) bool {
     //显示运行的命令
-    //fmt.Println(cmd.Args)
+    //log.Info(cmd.Args)
     
     cmd.Stdout = os.Stdout
     cmd.Stderr = os.Stderr
