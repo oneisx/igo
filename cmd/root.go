@@ -18,6 +18,7 @@ var version bool
 var quit bool
 
 // since v1.0.0
+
 var rootCmd = &cobra.Command{
     Use:   "igo",
     Short: "igo",

@@ -13,5 +13,6 @@ const (
     CommaDelim     = ","
     SemicolonDelim = ';'
     JsonBufSize    = 40960
+    SqlBufSize     = 4096
     PoweredBy      = "powered by oneisx"
 )
