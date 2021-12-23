@@ -102,7 +102,7 @@ func (p *pickOperation) exec() {
 }
 
 func (h *helpOperation) exec() {
-
+	util.ExecOSCmd(cst.AppName + cst.SpaceDelim + cst.SqlCommand + cst.SpaceDelim + cst.HelpFlag)
 }
 
 func readSqlFromTerminal() string {

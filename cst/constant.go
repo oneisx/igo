@@ -5,6 +5,8 @@ const (
     AppName        = "igo"
     HelpCommand    = "help"
     JsonCommand    = "json"
+    SqlCommand     = "sql"
+    HelpFlag       = "-h"
     UglyFlag       = "-u"
     QFlag          = "-q"
     QuitFlag       = "--quit"
