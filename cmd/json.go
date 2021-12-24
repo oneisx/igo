@@ -8,6 +8,7 @@ import (
     "igo/cst"
     "igo/util"
     "os"
+    "strings"
 )
 
 var Ugly bool
@@ -28,6 +29,21 @@ json string should be end with semicolon(;)`,
     Run: func(cmd *cobra.Command, args []string) {
         HandleJson()
     },
+}
+
+func ExecJsonCommand(input string) {
+    defer SetDefaultPretty()
+    ctx := strings.Split(input, cst.SpaceDelim)
+    for _, v := range ctx {
+        if v == cst.UglyFlag {
+            Ugly = true
+        }
+        if v != "" && v != cst.JsonCommand && v != cst.UglyFlag {
+            util.ExecOSCmd(cst.AppName + cst.SpaceDelim + input)
+            return
+        }
+    }
+    HandleJson()
 }
 
 func HandleJson() {

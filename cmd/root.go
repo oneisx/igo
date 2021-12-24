@@ -63,28 +63,18 @@ func doInteractive() {
 
 func execSubCommand(input string) {
     if strings.Contains(input, cst.JsonCommand) {
-        execJsonCommand(input)
+        ExecJsonCommand(input)
+        return
+    }
+    
+    if strings.Contains(input, cst.SqlCommand) {
+        ExecSqlCommand(input)
         return
     }
 
     if input != "" {
         util.ExecOSCmd(cst.AppName + cst.SpaceDelim + input)
     }
-}
-
-func execJsonCommand(input string) {
-    defer SetDefaultPretty()
-    ctx := strings.Split(input, cst.SpaceDelim)
-    for _, v := range ctx {
-        if v == cst.UglyFlag {
-            Ugly = true
-        }
-        if v != "" && v != cst.JsonCommand && v != cst.UglyFlag {
-            util.ExecOSCmd(cst.AppName + cst.SpaceDelim + input)
-            return
-        }
-    }
-    HandleJson()
 }
 
 func readString(reader *bufio.Reader) string {

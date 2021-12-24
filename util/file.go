@@ -10,29 +10,61 @@ import (
 )
 
 type MemoData struct {
+    Id   int
     Key  string
     Data string
 }
 
-func GetSQL(num int) MemoData {
-    return getMemoData(num, sqlFilePath())
+func GetSQL(id int) MemoData {
+    return getMemoData(id, sqlFilePath())
+}
+
+func GetAllSQL() map[int]MemoData {
+    return getAllMemoData(sqlFilePath())
 }
 
 func PutSQL(memoData MemoData) {
     putMemoData(memoData, sqlFilePath())
 }
 
-func GetMemo(num int) MemoData {
-    return getMemoData(num, memoFilePath())
+func UpdateSQL(memoData MemoData, id int) {
+    updateMemoData(memoData, id, sqlFilePath())
+}
+
+func DelSQL(id int) {
+    ms := GetAllSQL()
+    delete(ms, id)
+    for i := id; i < len(ms); i++ {
+        m := ms[i+1]
+        m.Id--
+        ms[i+1] = m
+        ms[i] = ms[i+1]
+    }
+    delete(ms, len(ms))
+    writeMemoData(ms, sqlFilePath())
+}
+
+func GetMemo(id int) MemoData {
+    return getMemoData(id, memoFilePath())
 }
 
 func PutMemo(memoData MemoData) {
     putMemoData(memoData, memoFilePath())
 }
 
-func getMemoData(num int, filename string) MemoData {
+func getMemoData(id int, filename string) MemoData {
     m := readMemoData(filename)
-    return m[num]
+    return m[id]
+}
+
+func getAllMemoData(filename string) map[int]MemoData {
+    return readMemoData(filename)
+}
+
+func updateMemoData(memoData MemoData, id int, filename string) {
+    ms := readMemoData(filename)
+    ms[id] = memoData
+    writeMemoData(ms, filename)
 }
 
 func putMemoData(memoData MemoData, filename string) {
@@ -42,8 +74,9 @@ func putMemoData(memoData MemoData, filename string) {
         fmt.Println(err)
         return
     }
-    num := len(ms) + 1
-    ms[num] = memoData
+    id := len(ms) + 1
+    memoData.Id = id
+    ms[id] = memoData
     writeMemoData(ms, filename)
 }
 
@@ -150,4 +183,3 @@ func userHomeDir() string {
     dir, _ := os.UserHomeDir()
     return dir
 }
-
