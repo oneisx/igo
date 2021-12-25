@@ -34,13 +34,6 @@ func UpdateSQL(memoData MemoData, id int) {
 func DelSQL(id int) {
     ms := GetAllSQL()
     delete(ms, id)
-    for i := id; i < len(ms); i++ {
-        m := ms[i+1]
-        m.Id--
-        ms[i+1] = m
-        ms[i] = ms[i+1]
-    }
-    delete(ms, len(ms))
     writeMemoData(ms, sqlFilePath())
 }
 
@@ -74,9 +67,9 @@ func putMemoData(memoData MemoData, filename string) {
         fmt.Println(err)
         return
     }
-    id := len(ms) + 1
-    memoData.Id = id
-    ms[id] = memoData
+    memoData.Id = ms[len(ms)].Id + 1
+    fmt.Println(memoData.Id)
+    ms[memoData.Id] = memoData
     writeMemoData(ms, filename)
 }
 

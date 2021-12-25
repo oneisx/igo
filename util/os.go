@@ -25,8 +25,10 @@ const (
 )
 
 type OperationSystem interface {
-    ClearScreen()
-    ExecOSCmd(command string)
+    clearScreen()
+    execOSCmd(command string)
+    getLineFeed() string
+    rmLineFeed(str string) string
 }
 
 type Windows struct{}
@@ -35,34 +37,58 @@ type Linux struct{}
 
 type MacOS struct{}
 
-func (windows *Windows) ClearScreen() {
+func (windows *Windows) clearScreen() {
     cmd := buildWindowsCmd(winClearCommand)
     doExecOSCmd(cmd)
 }
 
-func (linux *Linux) ClearScreen() {
+func (linux *Linux) clearScreen() {
     cmd := buildLinuxCmd(ClearCommand)
     doExecOSCmd(cmd)
 }
 
-func (macos *MacOS) ClearScreen() {
+func (macos *MacOS) clearScreen() {
     cmd := buildMacOSCmd(ClearCommand)
     doExecOSCmd(cmd)
 }
 
-func (windows *Windows) ExecOSCmd(command string) {
+func (windows *Windows) execOSCmd(command string) {
     cmd := buildWindowsCmd(command)
     doExecOSCmd(cmd)
 }
 
-func (linux *Linux) ExecOSCmd(command string) {
+func (linux *Linux) execOSCmd(command string) {
     cmd := buildLinuxCmd(command)
     doExecOSCmd(cmd)
 }
 
-func (macos *MacOS) ExecOSCmd(command string) {
+func (macos *MacOS) execOSCmd(command string) {
     cmd := buildMacOSCmd(command)
     doExecOSCmd(cmd)
+}
+
+func (windows *Windows) getLineFeed() string {
+    return "\r\n"
+}
+
+func (linux *Linux) getLineFeed() string {
+    return "\n"
+}
+
+func (macos *MacOS) getLineFeed() string {
+    return "\r"
+}
+
+func (windows *Windows) rmLineFeed(str string) string {
+    return str[:len(str)-2]
+}
+
+func (linux *Linux) rmLineFeed(str string) string {
+    return str[:len(str)-1]
+}
+
+func (macos *MacOS) rmLineFeed(str string) string {
+    return str[:len(str)-1]
 }
 
 func chooseOS() OperationSystem {
@@ -82,12 +108,22 @@ func chooseOS() OperationSystem {
 
 func ClearScreen() {
     operationSystem := chooseOS()
-    operationSystem.ClearScreen()
+    operationSystem.clearScreen()
 }
 
 func ExecOSCmd(command string) {
     operationSystem := chooseOS()
-    operationSystem.ExecOSCmd(command)
+    operationSystem.execOSCmd(command)
+}
+
+func GetLineFeed() string {
+    operationSystem := chooseOS()
+    return operationSystem.getLineFeed()
+}
+
+func RmLineFeed(str string) string {
+    operationSystem := chooseOS()
+    return operationSystem.rmLineFeed(str)
 }
 
 func RemoveLineBreak(str string) string {

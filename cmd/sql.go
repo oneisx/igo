@@ -7,7 +7,7 @@ import (
     "igo/cst"
     "igo/util"
     "os"
-    "strconv"
+    "sort"
     "strings"
 )
 
@@ -40,48 +40,30 @@ func init() {
 }
 
 func ExecSqlCommand(input string) {
-    resolveInput(input)
+    a := strings.Split(input, cst.SpaceDelim)[1:]
+    a = removeEmptyStr(a)
+    _ = sqlCmd.ParseFlags(a)
     execOperation()
     resetField()
 }
 
 func resetField() {
-    list=false
-    searchKey=""
-    sqlKey=""
-    updateSqlId=-1
-    delSqlId=-1
-    pickSqlId=-1
+    list = false
+    searchKey = ""
+    sqlKey = ""
+    updateSqlId = -1
+    delSqlId = -1
+    pickSqlId = -1
 }
 
-func resolveInput(input string) {
-    param := strings.Split(input, cst.SpaceDelim)[1:]
-    switch param[0] {
-    case "-l":
-        fallthrough
-    case "--list":
-        list = true
-    case "-s":
-        fallthrough
-    case "--search":
-        searchKey = param[1]
-    case "-a":
-        fallthrough
-    case "--add":
-        sqlKey = param[1]
-    case "-u":
-        fallthrough
-    case "--update":
-        updateSqlId, _ = strconv.Atoi(param[1])
-    case "-d":
-        fallthrough
-    case "--del":
-        delSqlId, _ = strconv.Atoi(param[1])
-    case "-p":
-        fallthrough
-    case "--pick":
-        pickSqlId, _ = strconv.Atoi(param[1])
+func removeEmptyStr(a []string) []string {
+    var newA []string
+    for _, v := range a {
+        if v != "" {
+            newA = append(newA, v)
+        }
     }
+    return newA
 }
 
 func execOperation() {
@@ -174,18 +156,15 @@ func (h *helpOperation) exec() {
 
 func readCommandFromTerminal4List() string {
     inputReader := bufio.NewReaderSize(os.Stdin, cst.SqlBufSize)
-    input, err := inputReader.ReadString('\n')
-    if err != nil {
-        panic(err)
-    }
-    return input[:len(input)-1]
+    line, _, _ := inputReader.ReadLine()
+    return string(line)
 }
 
 func readSqlFromTerminal() string {
     inputReader := bufio.NewReaderSize(os.Stdin, cst.SqlBufSize)
     input, err := inputReader.ReadString(cst.SemicolonDelim)
     if err != nil {
-        panic(err)
+       panic(err)
     }
     return input[:len(input)-1]
 }
@@ -203,9 +182,9 @@ func listSql(key string) {
         fmt.Println("id:", memoData.Id, cst.SpaceDelim, "key:", memoData.Key)
         count++
         if count >= 10 {
-            fmt.Println("Press 'Enter' to continue and 'q' to end browsing")
+            fmt.Println("(PaDn: Enter / Quit: q)")
             c := readCommandFromTerminal4List()
-            if c == "q" {
+            if strings.Compare(c, "q") == 0 {
                 break
             }
             count = 0
@@ -215,14 +194,20 @@ func listSql(key string) {
 }
 
 func convertAndFilterSql(ms map[int]util.MemoData, key string) []util.MemoData {
-    var mdSlice []util.MemoData
-    for i := 1; i <= len(ms); i++ {
-        m := ms[i]
+    var mdSlice MemoDataSlice
+    for _, memoData := range ms {
         if key == "" {
-            mdSlice = append(mdSlice, m)
-        } else if key != "" && strings.Contains(m.Key, key) {
-            mdSlice = append(mdSlice, m)
+            mdSlice = append(mdSlice, memoData)
+        } else if key != "" && strings.Contains(memoData.Key, key) {
+            mdSlice = append(mdSlice, memoData)
         }
     }
+    sort.Sort(mdSlice)
     return mdSlice
 }
+
+type MemoDataSlice []util.MemoData
+
+func (s MemoDataSlice) Len() int           { return len(s) }
+func (s MemoDataSlice) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
+func (s MemoDataSlice) Less(i, j int) bool { return s[i].Id < s[j].Id }
