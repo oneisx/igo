@@ -328,5 +328,8 @@ update sql successfully!
 ### 6.7 DELETE
 ```shell
 igo>sql -d 10
+delete sql info:
+SearchAddressById
+select * from address where id='1'
 delete sql successfully!
 ```

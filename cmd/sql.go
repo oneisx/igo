@@ -128,6 +128,7 @@ func (u *updateOperation) exec() {
         return
     }
     fmt.Println("sql to be updated:")
+    fmt.Println(m.Key)
     fmt.Println(m.Data)
     fmt.Printf("igo>sql:update:%s>", m.Key)
     sql := readSqlFromTerminal()
@@ -137,6 +138,15 @@ func (u *updateOperation) exec() {
 }
 
 func (d *delOperation) exec() {
+    m := util.GetSQL(delSqlId)
+    if m.Data == "" {
+        err := fmt.Errorf("error: sql can not be found with id=%v, failed to delete", delSqlId)
+        fmt.Println(err)
+        return
+    }
+    fmt.Println("delete sql info:")
+    fmt.Println(m.Key)
+    fmt.Println(m.Data)
     util.DelSQL(delSqlId)
     fmt.Println("delete sql successfully!")
 }
