@@ -243,3 +243,89 @@ igo>codec sha512 oneisx
 igo>codec sha512 oneisx -k thanks
 igo>codec sha512 oneisx --key thanks
 ```
+
+## 6. SQL
+如果你有很多SQL语句需要记录，那么这个命令将帮助你记录它，并快速检索、复制。
+```shell
+Memo function designed for SQL
+
+Usage:
+  igo sql [flags]
+
+Flags:
+  -a, --add string      add memo data
+  -d, --del int         del memo data (default -1)
+  -h, --help            help for sql
+  -l, --list            list memo data
+  -p, --pick int        select memo data (default -1)
+  -s, --search string   search memo data
+  -u, --update int      update memo data (default -1)
+```
+正如你所见，该命令没有子命令，通过Flags可以完成诸如新增、更新、删除、列表、搜索、选择等功能。
+
+### 6.1 TIPS
+我们使用Flags的时候支持三种模式，如下：
+```shell
+sql -aSearchUserById
+sql -a SearchUserById
+sql -a=SearchUserById
+```
+可根据喜好使用自己喜欢的模式，它们都是可以执行的的。
+
+下面将在交互模式下展示如何使用SQL的Flags:
+
+### 6.2 ADD
+```shell
+igo>sql -a SearchUserById
+igo>sql:add:SearchUserById>select * from user where id='1'; # SQL需要以分号结尾
+sql saved successfully!
+```
+
+### 6.3 LIST
+该Flag可以展示已存储的SQL语句，输入指定Id可以选择该SQL。每页展示10条SQL，存在分页时，按回车翻页，否则退出列表。
+```shell
+igo>sql -l
+( 3 rows )
+page: 1
+id: 8   key: SearchUserById
+id: 9   key: SearchUserByName
+id: 10   key: SearchAddressById
+(Pick: <id> / Quit: Enter)
+igo>sql:list>10
+select * from address where id='1'
+```
+
+### 6.4 PICK
+```shell
+# 10是SQL的ID，输入命令后会打印SQL详情，并将SQL复制到剪切板中。
+igo>sql -p 10
+select * from address where id='1'
+```
+
+### 6.5 SEARCH
+Search和List功能类似，只不过多了过滤的功能。
+```shell
+igo>sql -s User
+( 2 rows )
+page: 1
+id: 8   key: SearchUserById
+id: 9   key: SearchUserByName
+(Pick: <id> / Quit: Enter)
+igo>sql:search>9
+select * from user where name='oneisx'
+```
+
+### 6.6 UPDATE
+```shell
+igo>sql -u 10
+sql to be updated:
+select * from address where id='1'
+igo>sql:update:SearchAddressById>select * from address where id='2';
+update sql successfully!
+```
+
+### 6.7 DELETE
+```shell
+igo>sql -d 10
+delete sql successfully!
+```

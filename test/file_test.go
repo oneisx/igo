@@ -1,6 +1,7 @@
 package test
 
 import (
+    "fmt"
     "igo/util"
     "testing"
 )
@@ -38,4 +39,8 @@ func Test_SQLFile(t *testing.T) {
     util.PutSQL(util.MemoData{Key: "备份详情11", Data: "select * from dbs_backup_info"})
     util.PutSQL(util.MemoData{Key: "实例详情12", Data: "select * from dbs_instance"})
     util.PutSQL(util.MemoData{Key: "备份详情12", Data: "select * from dbs_backup_info"})
+}
+
+func Test_UtilFunc(t *testing.T) {
+    fmt.Println(util.IsNum("1"))
 }

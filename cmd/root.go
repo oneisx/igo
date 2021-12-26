@@ -78,11 +78,8 @@ func execSubCommand(input string) {
 }
 
 func readString(reader *bufio.Reader) string {
-    input, err := reader.ReadString('\n')
-    if err != nil {
-        os.Exit(1)
-    }
-    return util.RemoveLineBreak(input)
+    line, _, _ := reader.ReadLine()
+    return string(line)
 }
 
 func checkExit(input string) {

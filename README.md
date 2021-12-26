@@ -243,3 +243,90 @@ igo>codec sha512 oneisx
 igo>codec sha512 oneisx -k thanks
 igo>codec sha512 oneisx --key thanks
 ```
+
+## 6. SQL
+If you have many SQL statements to record, this command will help you record it, retrieve and copy it quickly.
+```shell
+Memo function designed for SQL
+
+Usage:
+  igo sql [flags]
+
+Flags:
+  -a, --add string      add memo data
+  -d, --del int         del memo data (default -1)
+  -h, --help            help for sql
+  -l, --list            list memo data
+  -p, --pick int        select memo data (default -1)
+  -s, --search string   search memo data
+  -u, --update int      update memo data (default -1)
+```
+As you can see, this command has no subcommands. Functions such as adding, updating, deleting, listing, searching and selecting can be completed through Flags.
+
+### 6.1 TIPS
+We support three modes when using flags, as follows:
+```shell
+sql -aSearchUserById
+sql -a SearchUserById
+sql -a=SearchUserById
+```
+You can use your favorite patterns according to your preferences, and they are all executable.
+
+The following shows how to use SQL flags in interactive mode:
+
+### 6.2 ADD
+```shell
+igo>sql -a SearchUserById
+igo>sql:add:SearchUserById>select * from user where id='1'; # SQL needs to end with a semicolon
+sql saved successfully!
+```
+
+### 6.3 LIST
+This Flag can display the stored SQL statement. Enter the specified ID to select the SQL statement. 
+Each page displays 10 SQL statements. When paging exists, press enter to turn the page. Otherwise, exit the list
+```shell
+igo>sql -l
+( 3 rows )
+page: 1
+id: 8   key: SearchUserById
+id: 9   key: SearchUserByName
+id: 10   key: SearchAddressById
+(Pick: <id> / Quit: Enter)
+igo>sql:list>10
+select * from address where id='1'
+```
+
+### 6.4 PICK
+```shell
+# 10 is the ID of SQL. After entering the command, the SQL details will be printed and copied to the clipboard.
+igo>sql -p 10
+select * from address where id='1'
+```
+
+### 6.5 SEARCH
+The functions of search and list are similar, but search has more filtering functions.
+```shell
+igo>sql -s User
+( 2 rows )
+page: 1
+id: 8   key: SearchUserById
+id: 9   key: SearchUserByName
+(Pick: <id> / Quit: Enter)
+igo>sql:search>9
+select * from user where name='oneisx'
+```
+
+### 6.6 UPDATE
+```shell
+igo>sql -u 10
+sql to be updated:
+select * from address where id='1'
+igo>sql:update:SearchAddressById>select * from address where id='2';
+sql update successfully!
+```
+
+### 6.7 DELETE
+```shell
+igo>sql -d 10
+delete sql successfully!
+```

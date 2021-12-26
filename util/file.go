@@ -9,6 +9,10 @@ import (
     "os"
 )
 
+const (
+    MaxSQLId = "MaxSQLId"
+)
+
 type MemoData struct {
     Id   int
     Key  string
@@ -67,8 +71,7 @@ func putMemoData(memoData MemoData, filename string) {
         fmt.Println(err)
         return
     }
-    memoData.Id = ms[len(ms)].Id + 1
-    fmt.Println(memoData.Id)
+    memoData.Id = getMaxSQLId()
     ms[memoData.Id] = memoData
     writeMemoData(ms, filename)
 }
@@ -80,6 +83,19 @@ func checkKeyExist(ms map[int]MemoData, key string) bool {
         }
     }
     return false
+}
+
+func getMaxSQLId() int {
+    var id int
+    res := GetConfig(MaxSQLId)
+    if res == nil {
+        id = 1
+    } else {
+        id = res.(int)
+        id++
+    }
+    PutConfig(MaxSQLId, id)
+    return id
 }
 
 func readMemoData(filename string) map[int]MemoData {
@@ -136,7 +152,6 @@ func read(filename string) []byte {
     )
     content, err = ioutil.ReadFile(filename)
     if err != nil {
-        fmt.Println(err)
         _ = os.MkdirAll(igoHomeDir(), os.ModePerm)
         return nil
     }

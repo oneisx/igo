@@ -106,11 +106,11 @@ type pickOperation struct{}
 type helpOperation struct{}
 
 func (l *listOperation) exec() {
-    listSql("")
+    listSql("", "list")
 }
 
 func (s *searchOperation) exec() {
-    listSql(searchKey)
+    listSql(searchKey,"search")
 }
 
 func (a *addOperation) exec() {
@@ -127,11 +127,13 @@ func (u *updateOperation) exec() {
         fmt.Println(err)
         return
     }
+    fmt.Println("sql to be updated:")
+    fmt.Println(m.Data)
     fmt.Printf("igo>sql:update:%s>", m.Key)
     sql := readSqlFromTerminal()
     m.Data = sql
     util.UpdateSQL(m, updateSqlId)
-    fmt.Println("sql update successfully!")
+    fmt.Println("update sql successfully!")
 }
 
 func (d *delOperation) exec() {
@@ -140,7 +142,15 @@ func (d *delOperation) exec() {
 }
 
 func (p *pickOperation) exec() {
-    m := util.GetSQL(pickSqlId)
+    pickSQL(pickSqlId)
+}
+
+func (h *helpOperation) exec() {
+    util.ExecOSCmd(cst.AppName + cst.SpaceDelim + cst.SqlCommand + cst.SpaceDelim + cst.HelpFlag)
+}
+
+func pickSQL(id int) {
+    m := util.GetSQL(id)
     if m.Data == "" {
         err := fmt.Errorf("error: sql can not be found with id=%v", pickSqlId)
         fmt.Println(err)
@@ -150,11 +160,8 @@ func (p *pickOperation) exec() {
     util.WriteText2Clipboard(m.Data)
 }
 
-func (h *helpOperation) exec() {
-    util.ExecOSCmd(cst.AppName + cst.SpaceDelim + cst.SqlCommand + cst.SpaceDelim + cst.HelpFlag)
-}
-
-func readCommandFromTerminal4List() string {
+func readCommandFromTerminal4List(flag string) string {
+    fmt.Printf("igo>sql:%s>", flag)
     inputReader := bufio.NewReaderSize(os.Stdin, cst.SqlBufSize)
     line, _, _ := inputReader.ReadLine()
     return string(line)
@@ -169,10 +176,10 @@ func readSqlFromTerminal() string {
     return input[:len(input)-1]
 }
 
-func listSql(key string) {
+func listSql(key string, flag string) {
     ms := util.GetAllSQL()
     mdSlice := convertAndFilterSql(ms, key)
-    fmt.Println("(", len(mdSlice), "rows)")
+    fmt.Println("(", len(mdSlice), "rows )")
     count := 0
     page := 1
     for _, memoData := range mdSlice {
@@ -182,14 +189,23 @@ func listSql(key string) {
         fmt.Println("id:", memoData.Id, cst.SpaceDelim, "key:", memoData.Key)
         count++
         if count >= 10 {
-            fmt.Println("(PaDn: Enter / Quit: q)")
-            c := readCommandFromTerminal4List()
+            fmt.Println("(Pick: <id> / PaDn: Enter / Quit: q)")
+            c := readCommandFromTerminal4List(flag)
             if strings.Compare(c, "q") == 0 {
                 break
+            }
+            if util.IsNum(c) {
+                pickSQL(util.ParseInt(c))
+                return
             }
             count = 0
             page++
         }
+    }
+    fmt.Println("(Pick: <id> / Quit: Enter)")
+    c := readCommandFromTerminal4List(flag)
+    if util.IsNum(c) {
+        pickSQL(util.ParseInt(c))
     }
 }
 
