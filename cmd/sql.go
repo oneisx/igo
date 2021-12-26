@@ -110,7 +110,7 @@ func (l *listOperation) exec() {
 }
 
 func (s *searchOperation) exec() {
-    listSql(searchKey,"search")
+    listSql(searchKey, "search")
 }
 
 func (a *addOperation) exec() {
@@ -181,7 +181,7 @@ func readSqlFromTerminal() string {
     inputReader := bufio.NewReaderSize(os.Stdin, cst.SqlBufSize)
     input, err := inputReader.ReadString(cst.SemicolonDelim)
     if err != nil {
-       panic(err)
+        panic(err)
     }
     return input[:len(input)-1]
 }
@@ -189,16 +189,15 @@ func readSqlFromTerminal() string {
 func listSql(key string, flag string) {
     ms := util.GetAllSQL()
     mdSlice := convertAndFilterSql(ms, key)
-    fmt.Println("(", len(mdSlice), "rows )")
+    rows := len(mdSlice)
+    fmt.Println("(", rows, "rows )")
     count := 0
     page := 1
     for _, memoData := range mdSlice {
-        if count == 0 {
+        if count == 0 && rows > 10 {
             fmt.Println("page:", page)
         }
-        fmt.Println("id:", memoData.Id, cst.SpaceDelim, "key:", memoData.Key)
-        count++
-        if count >= 10 {
+        if count > 9 {
             fmt.Println("(Pick: <id> / PaDn: Enter / Quit: q)")
             c := readCommandFromTerminal4List(flag)
             if strings.Compare(c, "q") == 0 {
@@ -211,6 +210,8 @@ func listSql(key string, flag string) {
             count = 0
             page++
         }
+        fmt.Println("id:", memoData.Id, cst.SpaceDelim, "key:", memoData.Key)
+        count++
     }
     fmt.Println("(Pick: <id> / Quit: Enter)")
     c := readCommandFromTerminal4List(flag)
