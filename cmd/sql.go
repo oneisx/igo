@@ -213,10 +213,12 @@ func listSql(key string, flag string) {
         fmt.Println("id:", memoData.Id, cst.SpaceDelim, "key:", memoData.Key)
         count++
     }
-    fmt.Println("(Pick: <id> / Quit: Enter)")
-    c := readCommandFromTerminal4List(flag)
-    if util.IsNum(c) {
-        pickSQL(util.ParseInt(c))
+    if rows != 0 {
+        fmt.Println("(Pick: <id> / Quit: Enter)")
+        c := readCommandFromTerminal4List(flag)
+        if util.IsNum(c) {
+            pickSQL(util.ParseInt(c))
+        }
     }
 }
 
