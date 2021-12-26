@@ -10,24 +10,25 @@ By the way, it will be more convenient to use Igo through [Igo Agent](https://gi
 
 ```shell
 Usage:
-igo [flags]
-igo [command]
+  igo [flags]
+  igo [command]
 
 Available Commands:
-clear       clear screen
-codec       A collection of encryption and decryption tools
-date        transfer timestamp to date
-help        Help about any command
-json        beautify json
-memo        memo [WIP]
-uuid        generate uuid
+  clear       clear screen
+  codec       A collection of encryption and decryption tools
+  date        transfer timestamp to date
+  help        Help about any command
+  json        beautify json
+  memo        memo [WIP]
+  sql         Memo function designed for SQL
+  uuid        generate uuid
 
 Flags:
---config string   config file (default is $HOME/.igo.yaml)
--h, --help            help for igo
--i, --interactive     interactively execute commands
--q, --quit            quit interactive mode
--v, --version         print the version of igo
+      --config string   config file (default is $HOME/.igo.yaml)
+  -h, --help            help for igo
+  -i, --interactive     interactively execute commands
+  -q, --quit            quit interactive mode
+  -v, --version         print the version of igo
 
 Use "igo [command] --help" for more information about a command.
 ```
