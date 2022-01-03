@@ -26,7 +26,7 @@ var rootCmd = &cobra.Command{
 No need to copy manually, the generated content will be placed in the clipboard.
 For more functions, please see the help.`,
     Run: func(cmd *cobra.Command, args []string) {
-        handleFlags()
+        execCmd()
     },
 }
 
@@ -34,7 +34,7 @@ func Execute() {
     cobra.CheckErr(rootCmd.Execute())
 }
 
-func handleFlags() {
+func execCmd() {
     if version {
         printVersion()
     }
@@ -44,7 +44,7 @@ func handleFlags() {
     }
 
     if !version && !interactive {
-       util.ExecOSCmd(cst.AppName + cst.SpaceDelim + cst.HelpCommand)
+       util.Operator.ExecOSCmd(cst.AppName + cst.SpaceDelim + cst.HelpCommand)
     }
 }
 
@@ -52,41 +52,21 @@ func doInteractive() {
     printVersion()
     inputReader := bufio.NewReader(os.Stdin)
     for {
-        fmt.Print("igo>")
+        fmt.Printf("igo:%s>", util.Operator.ShortPath())
+        //fmt.Print("igo>")
         input := readString(inputReader)
-
-        checkExit(input)
-
-        execSubCommand(input)
-    }
-}
-
-func execSubCommand(input string) {
-    if strings.Contains(input, cst.JsonCommand) {
-        ExecJsonCommand(input)
-        return
-    }
     
-    if strings.Contains(input, cst.SqlCommand) {
-        ExecSqlCommand(input)
-        return
-    }
-
-    if input != "" {
-        util.ExecOSCmd(cst.AppName + cst.SpaceDelim + input)
+        for _, h := range HandlerList {
+            if h.Handle(input) {
+                break
+            }
+        }
     }
 }
 
 func readString(reader *bufio.Reader) string {
     line, _, _ := reader.ReadLine()
-    return string(line)
-}
-
-func checkExit(input string) {
-    if strings.Contains(input, cst.QFlag) || strings.Contains(input, cst.QuitFlag) {
-        fmt.Println("bye")
-        os.Exit(1)
-    }
+    return strings.TrimSpace(string(line))
 }
 
 func init() {

@@ -39,7 +39,7 @@ func ExecJsonCommand(input string) {
             Ugly = true
         }
         if v != "" && v != cst.JsonCommand && v != cst.UglyFlag {
-            util.ExecOSCmd(cst.AppName + cst.SpaceDelim + input)
+            util.Operator.ExecOSCmd(cst.AppName + cst.SpaceDelim + input)
             return
         }
     }

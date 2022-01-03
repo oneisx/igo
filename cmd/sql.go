@@ -156,7 +156,7 @@ func (p *pickOperation) exec() {
 }
 
 func (h *helpOperation) exec() {
-    util.ExecOSCmd(cst.AppName + cst.SpaceDelim + cst.SqlCommand + cst.SpaceDelim + cst.HelpFlag)
+    util.Operator.ExecOSCmd(cst.AppName + cst.SpaceDelim + cst.SqlCommand + cst.SpaceDelim + cst.HelpFlag)
 }
 
 func pickSQL(id int) {

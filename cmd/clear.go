@@ -12,7 +12,7 @@ var clearCmd = &cobra.Command{
     Short: "clear screen",
     Long:  `clear screen`,
     Run: func(cmd *cobra.Command, args []string) {
-        util.ClearScreen()
+        util.Operator.ClearScreen()
     },
 }
 

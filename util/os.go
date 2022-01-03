@@ -5,6 +5,7 @@ import (
     "os"
     "os/exec"
     "runtime"
+    "strings"
 )
 
 const (
@@ -22,83 +23,243 @@ const (
     macOSCommandOption = "-a"
     
     ClearCommand = "clear"
+    CdCommand    = "cd"
+    
+    userHomeDirSymbol = "~"
 )
 
+var Operator = initOS()
+
 type OperationSystem interface {
-    clearScreen()
-    execOSCmd(command string)
-    getLineFeed() string
-    rmLineFeed(str string) string
+    ClearScreen()
+    ExecOSCmd(command string)
+    GetLineFeed() string
+    RmLineFeed(str string) string
+    buildCmd(command string) *exec.Cmd
+    ShortPath() string
+    PrintWorkDirectory() string
+    ChangeDirectory(path string)
+    ListDirectory()
+    init() OperationSystem
 }
 
-type Windows struct{}
+type Windows struct {
+    CurrentWorkDirectory string
+    LastWorkDirectory    string
+}
 
-type Linux struct{}
+type Linux struct {
+    CurrentWorkDirectory string
+    LastWorkDirectory    string
+}
 
-type MacOS struct{}
+type MacOS struct {
+    CurrentWorkDirectory string
+    LastWorkDirectory    string
+}
 
-func (windows *Windows) clearScreen() {
-    cmd := buildWindowsCmd(winClearCommand)
+func (windows *Windows) ClearScreen() {
+    cmd := windows.buildCmd(winClearCommand)
     doExecOSCmd(cmd)
 }
 
-func (linux *Linux) clearScreen() {
-    cmd := buildLinuxCmd(ClearCommand)
+func (linux *Linux) ClearScreen() {
+    cmd := linux.buildCmd(ClearCommand)
     doExecOSCmd(cmd)
 }
 
-func (macos *MacOS) clearScreen() {
-    cmd := buildMacOSCmd(ClearCommand)
+func (macos *MacOS) ClearScreen() {
+    cmd := macos.buildCmd(ClearCommand)
     doExecOSCmd(cmd)
 }
 
-func (windows *Windows) execOSCmd(command string) {
-    cmd := buildWindowsCmd(command)
-    doExecOSCmd(cmd)
+func (windows *Windows) ExecOSCmd(command string) {
+    cmd := windows.buildCmd(command)
+    ret := doExecOSCmd(cmd)
+    if !ret {
+        fmt.Println("error: doExecOsCmd failed!")
+    }
 }
 
-func (linux *Linux) execOSCmd(command string) {
-    cmd := buildLinuxCmd(command)
-    doExecOSCmd(cmd)
+func (linux *Linux) ExecOSCmd(command string) {
+    cmd := linux.buildCmd(command)
+    ret := doExecOSCmd(cmd)
+    if !ret {
+        fmt.Println("error: doExecOsCmd failed!")
+    }
 }
 
-func (macos *MacOS) execOSCmd(command string) {
-    cmd := buildMacOSCmd(command)
-    doExecOSCmd(cmd)
+func (macos *MacOS) ExecOSCmd(command string) {
+    cmd := macos.buildCmd(command)
+    ret := doExecOSCmd(cmd)
+    if !ret {
+        fmt.Println("error: doExecOsCmd failed!")
+    }
 }
 
-func (windows *Windows) getLineFeed() string {
+func (windows *Windows) GetLineFeed() string {
     return "\r\n"
 }
 
-func (linux *Linux) getLineFeed() string {
+func (linux *Linux) GetLineFeed() string {
     return "\n"
 }
 
-func (macos *MacOS) getLineFeed() string {
+func (macos *MacOS) GetLineFeed() string {
     return "\r"
 }
 
-func (windows *Windows) rmLineFeed(str string) string {
+func (windows *Windows) RmLineFeed(str string) string {
     return str[:len(str)-2]
 }
 
-func (linux *Linux) rmLineFeed(str string) string {
+func (linux *Linux) RmLineFeed(str string) string {
     return str[:len(str)-1]
 }
 
-func (macos *MacOS) rmLineFeed(str string) string {
+func (macos *MacOS) RmLineFeed(str string) string {
     return str[:len(str)-1]
 }
 
-func chooseOS() OperationSystem {
+func (windows *Windows) PrintWorkDirectory() string {
+    pwd := windows.CurrentWorkDirectory
+    pwd = "/" + strings.Replace(pwd, ":\\", "/", 1)
+    pwd = strings.ReplaceAll(pwd, "\\", "/")
+    return pwd
+}
+
+func (linux *Linux) PrintWorkDirectory() string {
+    return linux.CurrentWorkDirectory
+}
+
+func (macos *MacOS) PrintWorkDirectory() string {
+    return macos.CurrentWorkDirectory
+}
+
+func (windows *Windows) ShortPath() string {
+    pwd := windows.PrintWorkDirectory()
+    //if strings.Compare(pwd, UserHomeDir()) == 0 {
+    //    return userHomeDirSymbol
+    //}
+    return pwd[strings.LastIndex(pwd, "/")+1:]
+}
+
+func (linux *Linux) ShortPath() string {
+    pwd := linux.PrintWorkDirectory()
+    if strings.Compare(pwd, UserHomeDir()) == 0 {
+        return userHomeDirSymbol
+    }
+    return pwd[strings.LastIndex(pwd, string(os.PathSeparator))+1:]
+}
+
+func (macos *MacOS) ShortPath() string {
+    pwd := macos.PrintWorkDirectory()
+    if strings.Compare(pwd, UserHomeDir()) == 0 {
+        return userHomeDirSymbol
+    }
+    return pwd[strings.LastIndex(pwd, string(os.PathSeparator))+1:]
+}
+
+func (windows *Windows) ChangeDirectory(path string) {
+    if strings.Index(path, "\\") != -1 {
+        fmt.Println("error: invalid path!")
+        return
+    }
+    var tmpPath string
+    if path == "-" {
+        tmp := windows.CurrentWorkDirectory
+        windows.CurrentWorkDirectory = windows.LastWorkDirectory
+        windows.LastWorkDirectory = tmp
+        return
+    }
+    if path == "~" {
+        windows.LastWorkDirectory = windows.CurrentWorkDirectory
+        windows.CurrentWorkDirectory = UserHomeDir()
+        return
+    }
+    if strings.HasPrefix(path, "/") {
+        path = strings.Replace(path[1:], "/", ":\\", 1)
+        path = strings.ReplaceAll(path, "/", "\\")
+        tmpPath = path
+    } else {
+        tmpPath = windows.CurrentWorkDirectory
+        arr := strings.Split(path, "/")
+        for _, v := range arr {
+            if v == ".." {
+                tmpPath = tmpPath[:strings.LastIndex(tmpPath, "\\")]
+                if strings.Index(tmpPath, "\\") == -1 {
+                    tmpPath = tmpPath + "\\"
+                }
+                continue
+            }
+            if v != "" {
+                tmpPath = tmpPath + "\\" + v
+            }
+        }
+    }
+    if !PathExists(tmpPath) {
+        fmt.Println("error: path not exists!")
+        return
+    }
+    if IsFile(tmpPath) {
+        fmt.Println("error: path is a File!")
+        return
+    }
+    windows.CurrentWorkDirectory = tmpPath
+}
+
+func (linux *Linux) ChangeDirectory(path string) {
+    linux.ExecOSCmd("cd " + path)
+}
+
+func (macos *MacOS) ChangeDirectory(path string) {
+    macos.ExecOSCmd("cd " + path)
+}
+
+func (windows *Windows) ListDirectory() {
+    pwd := windows.CurrentWorkDirectory
+    disk := pwd[:strings.Index(pwd, ":")+1]
+    cmd := windows.buildCmd(disk + " && cd " + windows.CurrentWorkDirectory + " && dir")
+    ret := doExecOSCmd(cmd)
+    if !ret {
+        fmt.Println("error: doExecOsCmd failed!")
+    }
+}
+
+func (linux *Linux) ListDirectory() {
+    //linux.ExecOSCmd(CdCommand + cst.SpaceDelim + path)
+}
+
+func (macos *MacOS) ListDirectory() {
+    //macos.ExecOSCmd(CdCommand + cst.SpaceDelim + path)
+}
+
+func (windows *Windows) init() OperationSystem {
+    windows.CurrentWorkDirectory = UserHomeDir()
+    windows.LastWorkDirectory = UserHomeDir()
+    return windows
+}
+
+func (linux *Linux) init() OperationSystem {
+    linux.CurrentWorkDirectory = UserHomeDir()
+    linux.LastWorkDirectory = UserHomeDir()
+    return linux
+}
+
+func (macos *MacOS) init() OperationSystem {
+    macos.CurrentWorkDirectory = UserHomeDir()
+    macos.LastWorkDirectory = UserHomeDir()
+    return macos
+}
+
+func initOS() OperationSystem {
     switch runtime.GOOS {
     case windows:
-        return new(Windows)
+        return new(Windows).init()
     case linux:
-        return new(Linux)
+        return new(Linux).init()
     case macos:
-        return new(MacOS)
+        return new(MacOS).init()
     default:
         fmt.Println("Error: Operation system is not supported!")
         os.Exit(1)
@@ -106,52 +267,24 @@ func chooseOS() OperationSystem {
     return nil
 }
 
-func ClearScreen() {
-    operationSystem := chooseOS()
-    operationSystem.clearScreen()
-}
-
-func ExecOSCmd(command string) {
-    operationSystem := chooseOS()
-    operationSystem.execOSCmd(command)
-}
-
-func GetLineFeed() string {
-    operationSystem := chooseOS()
-    return operationSystem.getLineFeed()
-}
-
-func RmLineFeed(str string) string {
-    operationSystem := chooseOS()
-    return operationSystem.rmLineFeed(str)
-}
-
-func RemoveLineBreak(str string) string {
-    var lineBreakLength = 1
-    if runtime.GOOS == windows {
-        lineBreakLength = 2
-    }
-    return str[:len(str)-lineBreakLength]
-}
-
-func buildMacOSCmd(command string) *exec.Cmd {
+func (macos *MacOS) buildCmd(command string) *exec.Cmd {
     commands := []string{macOSCommandOption, command}
     return exec.Command(macOSCommand, commands...)
 }
 
-func buildLinuxCmd(command string) *exec.Cmd {
+func (linux *Linux) buildCmd(command string) *exec.Cmd {
     commands := []string{linuxCommandOption, command}
     return exec.Command(linuxOSCommand, commands...)
 }
 
-func buildWindowsCmd(command string) *exec.Cmd {
+func (windows *Windows) buildCmd(command string) *exec.Cmd {
     commands := []string{winCommandOption, command}
     return exec.Command(winOSCommand, commands...)
 }
 
 func doExecOSCmd(cmd *exec.Cmd) bool {
     //显示运行的命令
-    //log.Info(cmd.Args)
+    //fmt.Println(cmd.Args)
     
     cmd.Stdout = os.Stdout
     cmd.Stderr = os.Stderr
